@@ -71,5 +71,24 @@ namespace Nancy.Hal.Example
 
             container.Register(db);
         }
+
+        protected override void RequestStartup(TinyIoc.TinyIoCContainer container, Nancy.Bootstrapper.IPipelines pipelines, NancyContext context)
+        {
+            base.RequestStartup(container, pipelines, context);
+            pipelines.AfterRequest.AddItemToStartOfPipeline(
+                (ctx) =>
+                    {
+                        Console.WriteLine("BEFORE: " + ctx.Response.GetType());
+                        Console.WriteLine("BEFORE: " + ctx.NegotiationContext.DefaultModel.GetType());
+
+                        ctx.NegotiationContext.DefaultModel = new { message = "hi there!" };
+                    });
+            pipelines.AfterRequest.AddItemToEndOfPipeline(
+
+                (ctx) =>
+                    { Console.WriteLine("AFTER: "+ ctx.Response.GetType());
+                        Console.WriteLine(ctx.Trace.TraceLog);
+                    });
+        }
     }
 }

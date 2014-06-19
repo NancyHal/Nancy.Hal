@@ -4,7 +4,7 @@
 
     public static class NegotiatorExtensions
     {
-        public static Negotiator WithHalModel<TModel, TResource>(this Negotiator negotiator, TModel model)
+        public static Negotiator WithHalModel<TModel, TResource>(this Negotiator negotiator, TModel model) where TResource : IResource
         {
             var resource = AutoMapper.Mapper.Map<TModel, TResource>(model);
             return negotiator.WithMediaRangeModel("application/hal+json", resource);

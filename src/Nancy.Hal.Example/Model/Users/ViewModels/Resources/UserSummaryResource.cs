@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Hal.Example.Model.Users.ViewModels.Resources
 {
     using System;
+    using System.Collections.Generic;
 
     using Nancy.Hal.Example.Hal;
 
@@ -46,6 +47,23 @@
         protected override void CreateHypermedia()
         {
             
+        }
+    }
+
+    public class UserSummaryDecorator : HypermediaDecorator<UserSummary>
+    {
+        protected override IEnumerable<Link> BuildHypermedia(UserSummary model, NancyContext context)
+        {
+            yield return LinkTemplates.Users.GetUser.CreateLink(new { model.Id });
+        }
+    }
+
+    public class UserSummaryListDecorator : HypermediaDecorator<PagedList<UserSummary>>
+    {
+        protected override IEnumerable<Link> BuildHypermedia(PagedList<UserSummary> model, NancyContext context)
+        {
+            yield return LinkTemplates.Users.GetUsersPaged.CreateLink("self", context.Request.Query);
+            yield return LinkTemplates.Users.GetUsersPaged;
         }
     }
 }

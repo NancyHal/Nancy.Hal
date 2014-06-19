@@ -71,7 +71,7 @@
     <Compile Include="Hal\IResource.cs" />
     <Compile Include="Hal\Link.cs" />
     <Compile Include="Hal\LinkEqualityComparer.cs" />
-    <Compile Include="Hal\LinksConverter.cs" />
+    <Compile Include="Hal\JsonConverters\LinksConverter.cs" />
     <Compile Include="Hal\NegotiatorExtensions.cs" />
     <Compile Include="Hal\StringExtensions.cs" />
     <Compile Include="Model\PagedRepresentationList.cs" />

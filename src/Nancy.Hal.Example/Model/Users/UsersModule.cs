@@ -23,16 +23,15 @@
                     var request = this.Bind<GetUserList>();
                     var users = db.GetAllUsersPaged(request);
 
-                    return
-                        Negotiate.WithModel(users)
-                                 .WithHalModel(
-                                     new UserSummaryListResource(
-                                         users.Data.Select(Mapper.Map<UserSummary, UserSummaryResource>).ToList(),
-                                         users.TotalResults,
-                                         users.PageSize == 0 ? 1 : (long)Math.Ceiling((double)users.TotalResults / users.PageSize),
-                                         users.PageNumber,
-                                         LinkTemplates.Users.GetUsersPaged,
-                                         request));
+                    return Negotiate.WithModel(users);
+                    //.WithHalModel(
+                    //    new UserSummaryListResource(
+                    //        users.Data.Select(Mapper.Map<UserSummary, UserSummaryResource>).ToList(),
+                    //        users.TotalResults,
+                    //        users.PageSize == 0 ? 1 : (long)Math.Ceiling((double)users.TotalResults / users.PageSize),
+                    //        users.PageNumber,
+                    //        LinkTemplates.Users.GetUsersPaged,
+                    //        request));
                 };
 
             this.Get["/{userId:guid}"] = _ => 
@@ -44,9 +43,8 @@
                             return 404;
                         }
 
-                        return
-                            Negotiate.WithModel(user)
-                                     .WithHalModel<UserDetails, UserDetailsResource>(user);
+                        return Negotiate.WithModel(user);
+                        //.WithHalModel<UserDetails, UserDetailsResource>(user);
                     };
 
             this.Post["/"] = _ => 

@@ -37,12 +37,27 @@
             var uriTemplate = new UriTemplate(href);
             foreach (var parameter in parameters)
             {
-                foreach (var substitution in parameter.GetType().GetProperties())
+                var dynamicDictionary = parameter as DynamicDictionary;
+                if (dynamicDictionary != null)
                 {
-                    var name = substitution.Name.ToCamelCaseString();
-                    var value = substitution.GetValue(parameter, null);
-                    var substituionValue = value == null ? null : value.ToString();
-                    uriTemplate.SetParameter(name, substituionValue);
+                    var dictionary = dynamicDictionary;
+                    foreach (var substitution in dictionary.Keys)
+                    {
+                        var name = substitution.ToCamelCaseString();
+                        var value = dictionary[substitution];
+                        var substituionValue = value == null ? null : value.ToString();
+                        uriTemplate.SetParameter(name, substituionValue);
+                    }
+                }
+                else
+                {
+                    foreach (var substitution in parameter.GetType().GetProperties())
+                    {
+                        var name = substitution.Name.ToCamelCaseString();
+                        var value = substitution.GetValue(parameter, null);
+                        var substituionValue = value == null ? null : value.ToString();
+                        uriTemplate.SetParameter(name, substituionValue);
+                    }
                 }
             }
 
