@@ -112,7 +112,7 @@
         {
             var propertyInfo = Extensions.ExtractProperty(property);
             var getter = Extensions.CreateDelegate<Func<T, TEmbedded>>(propertyInfo.GetMethod, null);
-            this.Embed(new EmbeddedResource<T, TEmbedded>(propertyInfo.Name.ToCamelCase(), propertyInfo, getter));
+            this.Embed(new EmbeddedResource<T, TEmbedded>(rel, propertyInfo, getter));
             return this;
         }
     }
