@@ -7,6 +7,7 @@ namespace Nancy.Hal.Example
 
     using AutoMapper;
 
+    using Nancy.Hal.Example.Model;
     using Nancy.Hal.Example.Model.Users;
     using Nancy.Hal.Example.Model.Users.Commands;
     using Nancy.Hal.Example.Model.Users.ViewModels;
@@ -78,14 +79,35 @@ namespace Nancy.Hal.Example
             config.Configure<UserSummary>()
                 .Link(model => new Link("self", "/users/{id}").CreateLink(model));
 
-            config.Configure<List<UserSummary>>()
-                  .Link((model, ctx) => new Link("self", "/users/{?query,page,pageSize}").CreateLink(ctx.Request.Query));
+            config.Configure<PagedList<UserSummary>>()
+                  .Embed("users", x => x.Data)
+                  .Link(
+                      (model, ctx) =>
+                      new Link("self", "/users/{?query,page,pageSize}")
+                      .CreateLink(ctx.Request.Query, new { blah = "123" }))
+                  .Link(
+                      (model, ctx) =>
+                      new Link("next", "/users/{?query,page,pageSize}")
+                      .CreateLink(ctx.Request.Query, new { page = model.PageNumber + 1 }))
+                  .Link(
+                      (model, ctx) =>
+                      new Link("prev", "/users/{?query,page,pageSize}")
+                      .CreateLink(ctx.Request.Query, new { page = model.PageNumber - 1 }));
+
+                  //.Link(
+                  //    (model, ctx) =>
+                  //    new Link("self", "/users/{?query,page,pageSize}").CreateLink(ctx.Request.Query, new {blah="123"}), (model) => model.PageNumber < model.TotalPages)
+                  //.Link(
+                  //    (model, ctx) =>
+                  //    new Link("prev", "/users/{?query,page,pageSize}").CreateLink(
+                  //        ctx.Request.Query, new { page = model.PageNumber - 1 }),
+                  //    (model) => model.PageNumber > 0);
 
             config.Configure<UserDetails>()
                   .Embed("role", model => model.Role)
                   .Link(model => new Link("self", "/users/{id}").CreateLink(model))
                   .Link(model => new Link("change-role", "/users/{id}/role/{roleId}").CreateLink(model))
-                  .Link(model => new Link("deactivate", "/users/{id}/deactivate").CreateLink(model), (model, ctx) => model.Active && ctx.CurrentUser.Claims.Any(c => c == "DeactivateUsers"))
+                  //.Link(model => new Link("deactivate", "/users/{id}/deactivate").CreateLink(model), (model, ctx) => model.Active && ctx.CurrentUser.Claims.Any(c => c == "DeactivateUsers"))
                   .Link(model => new Link("reactivate", "/users/{id}/reactivate").CreateLink(model), model => !model.Active);
 
             config.Configure<Role>()

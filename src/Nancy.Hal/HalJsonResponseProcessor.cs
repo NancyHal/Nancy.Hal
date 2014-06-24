@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Hal.ResponseProcessor
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
@@ -53,6 +54,8 @@
             HalJsonTypeConfiguration typeConfig;
             configuration.TryGetTypeConfiguration(model.GetType(), out typeConfig);
 
+            if (typeConfig == null) return;
+
             if (typeConfig.Links.Any())
             {
                 var links = typeConfig.Links.Select(x => x.Invoke(model, context)).Where(x => x != null);
@@ -81,9 +84,24 @@
                     var embeddedModel = embedded.Getter.Invoke(model);
                     halModel.Remove(embedded.PropertyInfo.Name);
 
-                    IDictionary<string, object> embeddedHalRepresentation = embeddedModel.ToDynamic();
-                    BuildHypermedia(embeddedHalRepresentation, embeddedModel, context);
-                    embeddedResources[embedded.Rel] = embeddedHalRepresentation;
+                    if (!(embeddedModel is IEnumerable))
+                    {
+                        IDictionary<string, object> embeddedHalRepresentation = embeddedModel.ToDynamic();
+                        BuildHypermedia(embeddedHalRepresentation, embeddedModel, context);
+                        embeddedResources[embedded.Rel] = embeddedHalRepresentation;
+                    }
+                    else
+                    {
+                        var embeddedCollection = (IEnumerable)embeddedModel;
+
+                        embeddedResources[embedded.Rel] = embeddedCollection.Cast<object>().Select(
+                            x =>
+                                {
+                                    IDictionary<string, object> embeddedHalRepresentation = x.ToDynamic();
+                                    BuildHypermedia(embeddedHalRepresentation, x, context);
+                                    return embeddedHalRepresentation;
+                                });
+                    }
                 }
 
                 halModel["_embedded"] = embeddedResources;
