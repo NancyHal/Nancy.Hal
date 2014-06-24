@@ -1,9 +1,9 @@
-﻿namespace Nancy.Hal
+﻿namespace Nancy.Hal.Configuration
 {
     using System;
     using System.Reflection;
 
-    public class EmbeddedResource
+    internal class EmbeddedResource
     {
         public EmbeddedResource(string rel, PropertyInfo propertyInfo, Func<object, object> getter)
         {
@@ -19,7 +19,7 @@
         public Func<object, object> Getter { get; private set; }
     }
 
-    public class EmbeddedResource<T, TEmbedded> : EmbeddedResource
+    internal class EmbeddedResource<T, TEmbedded> : EmbeddedResource
     {
         public EmbeddedResource(string rel, PropertyInfo propertyInfo, Func<T, TEmbedded> getter) : base(rel, propertyInfo, (o) => getter((T)o))
         {

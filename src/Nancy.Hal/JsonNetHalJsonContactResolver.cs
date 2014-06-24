@@ -6,6 +6,7 @@
     using System.Reflection;
 
     using Nancy.Extensions;
+    using Nancy.Hal.Configuration;
 
     using Newtonsoft.Json.Linq;
     using Newtonsoft.Json.Serialization;

@@ -3,6 +3,8 @@
     using System;
     using System.Text.RegularExpressions;
 
+    using Nancy.Hal.Configuration;
+
     public class Link
     {
         private static readonly Regex IsTemplatedRegex = new Regex(@"{.+}", RegexOptions.Compiled);
