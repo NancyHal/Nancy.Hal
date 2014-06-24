@@ -100,6 +100,32 @@
             return this;
         }
 
+        public HalJsonTypeConfiguration<T> Link(Func<T, NancyContext, Link> linkGetter, Func<T, bool> predicate)
+        {
+            base.Link(
+                (o, ctx) =>
+                {
+                    var model = (T)o;
+                    if (predicate(model))
+                        return linkGetter(model, ctx);
+                    return null;
+                });
+            return this;
+        }
+
+        public HalJsonTypeConfiguration<T> Link(Func<T, NancyContext, Link> linkGetter, Func<T, NancyContext, bool> predicate)
+        {
+            base.Link(
+                (o, ctx) =>
+                {
+                    var model = (T)o;
+                    if (predicate(model, ctx))
+                        return linkGetter(model, ctx);
+                    return null;
+                });
+            return this;
+        }
+
         public HalJsonTypeConfiguration<T> Embed<TEmbedded>(Expression<Func<T, TEmbedded>> property)
         {
             var propertyInfo = Extensions.ExtractProperty(property);

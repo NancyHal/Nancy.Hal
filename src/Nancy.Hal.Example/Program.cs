@@ -12,6 +12,7 @@ namespace Nancy.Hal.Example
     using Nancy.Hal.Example.Model.Users.Commands;
     using Nancy.Hal.Example.Model.Users.ViewModels;
     using Nancy.Hosting.Self;
+    using Nancy.Responses;
 
     using Ploeh.AutoFixture;
 
@@ -99,11 +100,15 @@ namespace Nancy.Hal.Example
                   .Link(model => LinkTemplates.Users.GetUser.CreateLink("self", model))
                   .Link(model => LinkTemplates.Users.GetUser.CreateLink("edit", model))
                   .Link(model => LinkTemplates.User.ChangeRole.CreateLink(model))
+                  .Link(model => LinkTemplates.User.Deactivate.CreateLink(model), model => model.Active)
                   //.Link(model => new Link("deactivate", "/users/{id}/deactivate").CreateLink(model), (model, ctx) => model.Active && ctx.CurrentUser.Claims.Any(c => c == "DeactivateUsers"))
                   .Link(model => LinkTemplates.User.Reactivate.CreateLink(model), model => !model.Active);
 
             config.Configure<Role>()
                 .Link(model => LinkTemplates.Roles.GetRole.CreateLink("self", model));
+
+            config.Configure<List<Role>>()
+                  .Link((model, ctx) => LinkTemplates.Roles.GetRolesPaged.CreateLink("self", ctx.Request.Query));
 
             config.Configure<RoleDetails>()
                   .Link(model => LinkTemplates.Roles.GetRole.CreateLink("self", model))

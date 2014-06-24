@@ -3,9 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-    using Newtonsoft.Json;
-
+    
     public class PagedList<T> : IPagedList<T>
     {
         private readonly IList<T> inner;
