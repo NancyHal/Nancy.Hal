@@ -9,7 +9,6 @@ namespace Nancy.Hal.Example
     using Nancy.Hal.Example.Model.Users;
     using Nancy.Hal.Example.Model.Users.Commands;
     using Nancy.Hal.Example.Model.Users.ViewModels;
-    using Nancy.Hal.Example.Model.Users.ViewModels.Resources;
     using Nancy.Hosting.Self;
 
     using Ploeh.AutoFixture;
@@ -18,12 +17,8 @@ namespace Nancy.Hal.Example
     {
         static void Main(string[] args)
         {
-            Mapper.CreateMap<UserDetails, UserSummary>();            
-            Mapper.CreateMap<UserSummary, UserSummaryResource>();
-            Mapper.CreateMap<UserDetails, UserDetailsResource>();
+            Mapper.CreateMap<UserDetails, UserSummary>();
             Mapper.CreateMap<RoleDetails, Role>();
-            Mapper.CreateMap<Role, RoleSummaryResource>();
-            Mapper.CreateMap<RoleDetails, RoleDetailsResource>();
 
             using (var host = new NancyHost(new Uri("http://localhost:1234")))
             {

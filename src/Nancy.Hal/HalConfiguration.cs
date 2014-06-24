@@ -5,8 +5,6 @@
 
     using Nancy.Hal.Configuration;
 
-    using Newtonsoft.Json;
-
     public class HalJsonConfiguration
     {
         private readonly ConcurrentDictionary<Type, HalJsonTypeConfiguration> cache = new ConcurrentDictionary<Type, HalJsonTypeConfiguration>();
@@ -22,7 +20,5 @@
             cache.TryAdd(typeof(T), config);
             return config;
         }
-
-        public Func<JsonSerializer> BuildJsonSerializer = () => new JsonSerializer();
     }
 }

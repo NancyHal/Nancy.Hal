@@ -1,15 +1,8 @@
 ﻿namespace Nancy.Hal.Example.Model.Users
 {
-    using System.Linq;
-
-    using AutoMapper;
-
     using Nancy;
-    using Nancy.Hal.Example.Hal;
     using Nancy.Hal.Example.Model.Users.Commands;
     using Nancy.Hal.Example.Model.Users.Queries;
-    using Nancy.Hal.Example.Model.Users.ViewModels;
-    using Nancy.Hal.Example.Model.Users.ViewModels.Resources;
     using Nancy.ModelBinding;
 
     public class RolesModule : NancyModule
@@ -21,11 +14,7 @@
                     {
                         var request = this.Bind<GetRoleList>();
                         var roles = db.GetAllRoles();
-                        return
-                            Negotiate.WithModel(roles)
-                                     .WithHalModel(
-                                         new RoleSummaryListResource(
-                                             roles.Select(Mapper.Map<Role, RoleSummaryResource>).ToList()));
+                        return Negotiate.WithModel(roles);
                     };
 
             this.Get["/{roleId:guid}"] = _ => 
@@ -38,7 +27,7 @@
                         return 404;
                     }
 
-                    return Negotiate.WithModel(role).WithHalModel<RoleDetails, RoleDetailsResource>(role);
+                    return Negotiate.WithModel(role);
                 };
 
             this.Post["/"] = _ =>
@@ -49,7 +38,6 @@
                         return Negotiate
                             .WithHeader("Location", "/roles/" + req.Id.GetValueOrDefault())
                             .WithModel(role)
-                            .WithHalModel<RoleDetails, RoleDetailsResource>(role)
                             .WithStatusCode(HttpStatusCode.Created);
                     };
 
@@ -61,8 +49,7 @@
                     
                     return
                         Negotiate.WithHeader("Location", "/roles/" + req.RoleId)
-                                 .WithModel(role)
-                                 .WithHalModel<RoleDetails, RoleDetailsResource>(role);
+                                 .WithModel(role);
                 };
 
             this.Delete["/{roleId:guid}"] = _ => 

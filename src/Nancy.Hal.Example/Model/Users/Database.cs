@@ -10,9 +10,9 @@
 
     public class Database
     {
-        private static IList<UserDetails> userDatabase = new List<UserDetails>();
+        private static readonly IList<UserDetails> userDatabase = new List<UserDetails>();
 
-        private static IList<RoleDetails> roleDatabase = new List<RoleDetails>(); 
+        private static readonly IList<RoleDetails> roleDatabase = new List<RoleDetails>(); 
 
         public void CreateUser(CreateUser command)
         {

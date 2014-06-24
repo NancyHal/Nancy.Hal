@@ -37,6 +37,18 @@
             return (T)(object)Delegate.CreateDelegate(typeof(T), methodInfo);
         }
 
+        internal static dynamic ToDynamic(this object value)
+        {
+            IDictionary<string, object> expando = new ExpandoObject();
+
+            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(value.GetType()))
+            {
+                expando.Add(property.Name, property.GetValue(value));
+            }
+
+            return expando as ExpandoObject;
+        }
+
         private class PropertyFinder : ExpressionVisitor
         {
             private PropertyInfo _found;
@@ -52,21 +64,6 @@
                 this.Visit(exp);
                 return this._found;
             }
-        }
-    }
-
-    public static class DynamicExtensions
-    {
-        public static dynamic ToDynamic(this object value)
-        {
-            IDictionary<string, object> expando = new ExpandoObject();
-
-            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(value.GetType()))
-            {
-                expando.Add(property.Name, property.GetValue(value));
-            }
-
-            return expando as ExpandoObject;
         }
     }
 }

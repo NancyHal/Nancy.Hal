@@ -1,16 +1,8 @@
 ﻿namespace Nancy.Hal.Example.Model.Users
 {
-    using System;
-    using System.Linq;
-
-    using AutoMapper;
-
     using Nancy;
-    using Nancy.Hal.Example.Hal;
     using Nancy.Hal.Example.Model.Users.Commands;
     using Nancy.Hal.Example.Model.Users.Queries;
-    using Nancy.Hal.Example.Model.Users.ViewModels;
-    using Nancy.Hal.Example.Model.Users.ViewModels.Resources;
     using Nancy.ModelBinding;
 
     public class UsersModule : NancyModule
@@ -24,14 +16,6 @@
                     var users = db.GetAllUsersPaged(request);
 
                     return Negotiate.WithModel(users);
-                    //.WithHalModel(
-                    //    new UserSummaryListResource(
-                    //        users.Data.Select(Mapper.Map<UserSummary, UserSummaryResource>).ToList(),
-                    //        users.TotalResults,
-                    //        users.PageSize == 0 ? 1 : (long)Math.Ceiling((double)users.TotalResults / users.PageSize),
-                    //        users.PageNumber,
-                    //        LinkTemplates.Users.GetUsersPaged,
-                    //        request));
                 };
 
             this.Get["/{userId:guid}"] = _ => 
@@ -44,7 +28,6 @@
                         }
 
                         return Negotiate.WithModel(user);
-                        //.WithHalModel<UserDetails, UserDetailsResource>(user);
                     };
 
             this.Post["/"] = _ => 
@@ -56,7 +39,6 @@
                         return
                             this.Negotiate.WithHeader("Location", LinkTemplates.Users.GetUser.CreateLink(new { Id = user.Id }).ToString())
                                      .WithModel(user)
-                                     .WithHalModel<UserDetails, UserDetailsResource>(user)
                                      .WithStatusCode(HttpStatusCode.Created);
                     };
 
@@ -67,7 +49,6 @@
                         var user = db.GetUserById(request.UserId);
 
                         return this.Negotiate.WithModel(user)
-                            .WithHalModel<UserDetails, UserDetailsResource>(user)
                             .WithStatusCode(HttpStatusCode.OK);
                     };
 
@@ -78,7 +59,6 @@
                         var user = db.GetUserById(request.UserId);
 
                         return this.Negotiate.WithModel(user)
-                            .WithHalModel<UserDetails, UserDetailsResource>(user)
                             .WithStatusCode(HttpStatusCode.OK);
                     };
 
@@ -89,7 +69,6 @@
                         var user = db.GetUserById(request.UserId);
 
                         return this.Negotiate.WithModel(user)
-                            .WithHalModel<UserDetails, UserDetailsResource>(user)
                             .WithStatusCode(HttpStatusCode.OK);
                     };
 
@@ -100,7 +79,6 @@
                     var user = db.GetUserById(request.UserId);
 
                     return this.Negotiate.WithModel(user)
-                        .WithHalModel<UserDetails, UserDetailsResource>(user)
                         .WithStatusCode(HttpStatusCode.OK);
                 };
         }

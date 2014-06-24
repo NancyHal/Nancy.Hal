@@ -32,10 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper">
+    <Reference Include="AutoMapper, Version=3.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper.Net4">
+    <Reference Include="AutoMapper.Net4, Version=3.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
     <Reference Include="Nancy">
@@ -63,23 +65,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Hal\JsonConverters\EmbeddedResourceConverter.cs" />
-    <Compile Include="Hal\HalProcessor.cs" />
-    <Compile Include="Hal\HalResponse.cs" />
-    <Compile Include="Hal\HalSerializer.cs" />
-    <Compile Include="Hal\IRepresentationList.cs" />
-    <Compile Include="Hal\IResource.cs" />
-    <Compile Include="Hal\Link.cs" />
-    <Compile Include="Hal\LinkEqualityComparer.cs" />
-    <Compile Include="Hal\JsonConverters\LinksConverter.cs" />
-    <Compile Include="Hal\NegotiatorExtensions.cs" />
-    <Compile Include="Hal\StringExtensions.cs" />
-    <Compile Include="Model\PagedRepresentationList.cs" />
-    <Compile Include="Hal\Representation.cs" />
-    <Compile Include="Hal\JsonConverters\ResourceConverter.cs" />
-    <Compile Include="Hal\SimpleListRepresentation.cs" />
-    <Compile Include="Hal\UriTemplate.cs" />
-    <Compile Include="Hal\HalJsonSerializer.cs" />
     <Compile Include="Model\LinkTemplates.cs" />
     <Compile Include="Model\Users\Commands\ChangeUserRole.cs" />
     <Compile Include="Model\Users\Commands\CreateRole.cs" />
@@ -100,12 +85,6 @@
     <Compile Include="Model\Users\ViewModels\IHaveCreatedModifiedTimestamps.cs" />
     <Compile Include="Model\IPagedList.cs" />
     <Compile Include="Model\PagedList.cs" />
-    <Compile Include="Model\Users\ViewModels\Resources\RoleDetailsResource.cs" />
-    <Compile Include="Model\Users\ViewModels\Resources\RoleResource.cs" />
-    <Compile Include="Model\Users\ViewModels\Resources\RoleSummaryListResource.cs" />
-    <Compile Include="Model\Users\ViewModels\Resources\UserDetailsResource.cs" />
-    <Compile Include="Model\Users\ViewModels\Resources\UserSummaryListResource.cs" />
-    <Compile Include="Model\Users\ViewModels\Resources\UserSummaryResource.cs" />
     <Compile Include="Model\Users\ViewModels\Role.cs" />
     <Compile Include="Model\Users\ViewModels\RoleDetails.cs" />
     <Compile Include="Model\Users\ViewModels\UserDetails.cs" />
@@ -116,6 +95,12 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nancy.Hal\Nancy.Hal.csproj">
+      <Project>{1b360192-4675-45a9-a2cd-2bacbf5bc282}</Project>
+      <Name>Nancy.Hal</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />

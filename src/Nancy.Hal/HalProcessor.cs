@@ -9,17 +9,16 @@
     using Nancy.Responses;
     using Nancy.Responses.Negotiation;
 
-    public class HalProcessor : IResponseProcessor
+    public class HalJsonResponseProcessor : IResponseProcessor
     {
         private const string ContentType = "application/hal+json";
         private readonly HalJsonConfiguration configuration;
         private readonly ISerializer serializer;
 
-        public HalProcessor(HalJsonConfiguration configuration, IEnumerable<ISerializer> serializers)
+        public HalJsonResponseProcessor(HalJsonConfiguration configuration, IEnumerable<ISerializer> serializers)
         {
             this.configuration = configuration;
-            this.serializer = serializers.FirstOrDefault(x => x.CanSerialize(ContentType))
-                              ?? new DefaultJsonSerializer();
+            this.serializer = serializers.FirstOrDefault(x => x.CanSerialize("application/json")); //any json serializer will do
         }
 
         public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)

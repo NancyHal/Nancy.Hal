@@ -1,13 +1,12 @@
 ﻿namespace Nancy.Hal
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
 
     using Nancy.Hal.Configuration;
 
-    public class Link
+    public class Link : IEquatable<Link>
     {
         private static readonly Regex IsTemplatedRegex = new Regex(@"{.+}", RegexOptions.Compiled);
 
@@ -41,7 +40,7 @@
             var uriTemplate = new UriTemplate(href);
             foreach (var parameter in parameters)
             {
-                var dictionary = parameter as IDictionary<string, object>;
+                var dictionary = parameter as IDictionary<string, object>; //should work for ExpandoObject, DynamicDictionary, etc
                 if (dictionary != null)
                 {
                     foreach (var substitution in dictionary.Keys)
@@ -94,6 +93,38 @@
             href = SubstituteParams(href, parameters);
 
             return new Uri(href, UriKind.RelativeOrAbsolute);
+        }
+
+
+        public bool Equals(Link other)
+        {
+            return string.Compare(this.Href, other.Href, StringComparison.OrdinalIgnoreCase) == 0 &&
+                  string.Compare(this.Rel, other.Rel, StringComparison.OrdinalIgnoreCase) == 0;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Link)obj);
+        }
+
+        public int GetHashCode(Link lnk)
+        {
+            var str = (string.IsNullOrEmpty(lnk.Rel) ? "norel" : lnk.Rel) + "~" + (string.IsNullOrEmpty(lnk.Href) ? "nohref" : lnk.Href);
+            var h = str.GetHashCode();
+            return h;
+        }
+
+        public static bool operator ==(Link left, Link right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Link left, Link right)
+        {
+            return !Equals(left, right);
         }
     }
 }

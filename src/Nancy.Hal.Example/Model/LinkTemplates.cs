@@ -1,6 +1,4 @@
-﻿namespace Nancy.Hal.Example.Model
-{
-    using Nancy.Hal.Example.Hal;
+﻿namespace Nancy.Hal.Example.Model{
 
     public static class LinkTemplates
     {

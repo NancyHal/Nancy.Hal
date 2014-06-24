@@ -61,11 +61,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\UserSummary.cs" />
-    <Compile Include="Models\RoleDetails.cs" />
-    <Compile Include="Models\RoleSummary.cs" />
-    <Compile Include="Models\UserDetails.cs" />
-    <Compile Include="NancyTests.cs" />
     <Compile Include="SerializationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -74,6 +69,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nancy.Hal.Example\Nancy.Hal.Example.csproj">
+      <Project>{763c7ea5-6a09-43ea-9597-5cbf239a0d51}</Project>
+      <Name>Nancy.Hal.Example</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nancy.Hal\Nancy.Hal.csproj">
       <Project>{1B360192-4675-45A9-A2CD-2BACBF5BC282}</Project>
       <Name>Nancy.Hal</Name>
