@@ -1,6 +1,8 @@
 ﻿namespace Nancy.Hal
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Text.RegularExpressions;
 
     using Nancy.Hal.Configuration;
@@ -39,10 +41,9 @@
             var uriTemplate = new UriTemplate(href);
             foreach (var parameter in parameters)
             {
-                var dynamicDictionary = parameter as DynamicDictionary;
-                if (dynamicDictionary != null)
+                var dictionary = parameter as IDictionary<string, object>;
+                if (dictionary != null)
                 {
-                    var dictionary = dynamicDictionary;
                     foreach (var substitution in dictionary.Keys)
                     {
                         var name = substitution.ToCamelCaseString();

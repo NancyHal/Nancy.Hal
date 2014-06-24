@@ -1,6 +1,9 @@
 ﻿namespace Nancy.Hal.Configuration
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Dynamic;
     using System.Globalization;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -49,6 +52,21 @@
                 this.Visit(exp);
                 return this._found;
             }
+        }
+    }
+
+    public static class DynamicExtensions
+    {
+        public static dynamic ToDynamic(this object value)
+        {
+            IDictionary<string, object> expando = new ExpandoObject();
+
+            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(value.GetType()))
+            {
+                expando.Add(property.Name, property.GetValue(value));
+            }
+
+            return expando as ExpandoObject;
         }
     }
 }
