@@ -11,8 +11,6 @@
 
         public static class User
         {
-            public static Link Edit { get { return new Link("edit", "/users/{id}"); } }
-
             public static Link Deactivate { get { return new Link("deactivate", "/users/{id}/deactivate"); } }
 
             public static Link Reactivate { get { return new Link("reactivate", "/users/{id}/reactivate"); } }
