@@ -4,8 +4,8 @@
 
     public interface IHaveCreatedModifiedTimestamps
     {
-        DateTimeOffset Created { get; set; }
+        DateTime Created { get; set; }
 
-        DateTimeOffset? Modified { get; set; }
+        DateTime? Modified { get; set; }
     }
 }

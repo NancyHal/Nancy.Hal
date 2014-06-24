@@ -19,7 +19,7 @@
             var user = new UserDetails()
                            {
                                Id = Guid.NewGuid(),
-                               Created = DateTimeOffset.Now,
+                               Created = DateTime.Now,
                                Active = true,
                                UserName = command.UserName,
                                FullName = command.FullName,
@@ -38,7 +38,7 @@
             user.FullName = command.FullName;
             user.Email = command.Email;
             user.WindowsUsername = command.WindowsUserName;
-            user.Modified = DateTimeOffset.Now;
+            user.Modified = DateTime.Now;
         }
 
         public void ChangeRole(ChangeUserRole command)
@@ -47,21 +47,21 @@
             user.Role =
                 AutoMapper.Mapper.Map<RoleDetails, Role>(roleDatabase.SingleOrDefault(r => r.Id == command.RoleId));
 
-            user.Modified = DateTimeOffset.Now;
+            user.Modified = DateTime.Now;
         }
 
         public void Deactivate(DeactivateUser command)
         {
             var user = userDatabase.Single(x => x.Id == command.UserId);
             user.Active = false;
-            user.Modified = DateTimeOffset.Now;
+            user.Modified = DateTime.Now;
         }
 
         public void Reactivate(ReactivateUser command)
         {
             var user = userDatabase.Single(x => x.Id == command.UserId);
             user.Active = true;
-            user.Modified = DateTimeOffset.Now;
+            user.Modified = DateTime.Now;
         }
 
         public void CreateRole(CreateRole command)
@@ -71,7 +71,7 @@
                                Id = Guid.NewGuid(),
                                Name = command.Name,
                                Permissions = command.Permissions,
-                               Created = DateTimeOffset.Now
+                               Created = DateTime.Now
                            };
             roleDatabase.Add(role);
             command.Id = role.Id;
@@ -82,7 +82,7 @@
             var role = roleDatabase.Single(x => x.Id == command.RoleId);
             role.Name = command.Name;
             role.Permissions = command.Permissions;
-            role.Modified = DateTimeOffset.Now;
+            role.Modified = DateTime.Now;
         }
 
         public void DeleteRole(DeleteRole command)

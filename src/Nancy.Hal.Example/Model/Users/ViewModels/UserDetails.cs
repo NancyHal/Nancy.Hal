@@ -16,9 +16,9 @@
 
         bool Active { get; set; }
 
-        DateTimeOffset Created { get; set; }
+        DateTime Created { get; set; }
 
-        DateTimeOffset? Modified { get; set; }
+        DateTime? Modified { get; set; }
     }
 
     public class UserDetails : IHaveCreatedModifiedTimestamps, IUserDetails
@@ -37,8 +37,8 @@
 
         public Role Role { get; set; }
 
-        public DateTimeOffset Created { get; set; }
+        public DateTime Created { get; set; }
 
-        public DateTimeOffset? Modified { get; set; }
+        public DateTime? Modified { get; set; }
     }
 }

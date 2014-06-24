@@ -49,7 +49,7 @@
     <Compile Include="HalConfiguration.cs" />
     <Compile Include="Link.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="HalProcessor.cs" />
+    <Compile Include="HalJsonResponseProcessor.cs" />
     <Compile Include="UriTemplate.cs" />
   </ItemGroup>
   <ItemGroup>

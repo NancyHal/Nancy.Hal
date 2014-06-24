@@ -2,6 +2,7 @@
 
 namespace Nancy.Hal.Example
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     using AutoMapper;
@@ -65,25 +66,38 @@ namespace Nancy.Hal.Example
             }
 
             container.Register(db);
+
+            container.Register(BuildHypermediaConfiguration());
         }
 
-        protected override void RequestStartup(TinyIoc.TinyIoCContainer container, Nancy.Bootstrapper.IPipelines pipelines, NancyContext context)
+
+        public static HalJsonConfiguration BuildHypermediaConfiguration()
         {
-            base.RequestStartup(container, pipelines, context);
-            pipelines.AfterRequest.AddItemToStartOfPipeline(
-                (ctx) =>
-                    {
-                        Console.WriteLine("BEFORE: " + ctx.Response.GetType());
-                        Console.WriteLine("BEFORE: " + ctx.NegotiationContext.DefaultModel.GetType());
+            var config = new HalJsonConfiguration();
 
-                        ctx.NegotiationContext.DefaultModel = new { message = "hi there!" };
-                    });
-            pipelines.AfterRequest.AddItemToEndOfPipeline(
+            config.Configure<UserSummary>()
+                .Link(model => new Link("self", "/users/{id}").CreateLink(model));
 
-                (ctx) =>
-                    { Console.WriteLine("AFTER: "+ ctx.Response.GetType());
-                        Console.WriteLine(ctx.Trace.TraceLog);
-                    });
+            config.Configure<List<UserSummary>>()
+                  .Link((model, ctx) => new Link("self", "/users/{?query,page,pageSize}").CreateLink(ctx.Request.Query));
+
+            config.Configure<UserDetails>()
+                  .Embed("role", model => model.Role)
+                  .Link(model => new Link("self", "/users/{id}").CreateLink(model))
+                  .Link(model => new Link("change-role", "/users/{id}/role/{roleId}").CreateLink(model))
+                  .Link(model => new Link("deactivate", "/users/{id}/deactivate").CreateLink(model), (model, ctx) => model.Active && ctx.CurrentUser.Claims.Any(c => c == "DeactivateUsers"))
+                  .Link(model => new Link("reactivate", "/users/{id}/reactivate").CreateLink(model), model => !model.Active);
+
+            config.Configure<Role>()
+                .Link(model => new Link("self", "/roles/{id}").CreateLink(model));
+
+            config.Configure<RoleDetails>()
+                  .Link(model => new Link("self", "/roles/{id}").CreateLink(model))
+                  .Link(model => new Link("edit", "/roles/{id}").CreateLink(model))
+                  .Link(model => new Link("delete", "/roles/{id}").CreateLink(model));
+
+            return config;
         }
     }
+
 }
