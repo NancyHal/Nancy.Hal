@@ -10,6 +10,7 @@
     using Nancy.Security;
 
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     using Xunit;
 
@@ -74,9 +75,10 @@
         public void should_build_links()
         {
             var user = new UserSummary() { Id = 123, Name = "Alice" };
-            var json = this.Serialize(config, user);
-
-            Console.WriteLine(json);
+            var json = this.SerializeToJObject(config, user);
+            Assert.Equal(123, json["id"]);
+            Assert.Equal("Alice", json["name"]);
+            Assert.Equal("/users/123", json["_links"]["self"]["href"]);
         }
 
         [Fact]
@@ -87,19 +89,61 @@
             A.CallTo(() => context.CurrentUser.Claims).Returns(new[] { "DeactivateUsers" });
 
             var user = new UserDetails() { Id = 123, Name = "Alice", Role = new RoleSummary(){Id = 456, Name = "Admin"}, IsActive = true};
-            var json = this.Serialize(config, user, context);
+            var json = this.SerializeToJObject(config, user, context);
 
-            Console.WriteLine(json);
+            Assert.Equal(123, json["id"]);
+            Assert.Equal("Alice", json["name"]);
+            Assert.Equal(true, json["isActive"]);
+            Assert.Equal("/users/123", json["_links"]["self"]["href"]);
+            Assert.Equal("/users/123/deactivate", json["_links"]["deactivate"]["href"]);
+        }
+
+        [Fact]
+        public void should_embed_embedded_resources()
+        {
+            var context = new NancyContext();
+            context.CurrentUser = A.Fake<IUserIdentity>();
+            A.CallTo(() => context.CurrentUser.Claims).Returns(new[] { "DeactivateUsers" });
+
+            var user = new UserDetails() { Id = 123, Name = "Alice", Role = new RoleSummary() { Id = 456, Name = "Admin" }, IsActive = true };
+            var json = this.SerializeToJObject(config, user, context);
+
+            Assert.Equal(456, json["_embedded"]["role"]["id"]);
+            Assert.Equal("Admin", json["_embedded"]["role"]["name"]);
+            Assert.Equal("/roles/456", json["_embedded"]["role"]["_links"]["self"]["href"]);
+        }
+
+        [Fact(Skip = "Broken - see https://github.com/JakeGinnivan/WebApi.Hal/issues/46")]
+        public void should_leave_templated_path_params_in_href()
+        {
+            var context = new NancyContext();
+            context.CurrentUser = A.Fake<IUserIdentity>();
+            A.CallTo(() => context.CurrentUser.Claims).Returns(new[] { "DeactivateUsers" });
+
+            var user = new UserDetails() { Id = 123, Name = "Alice", Role = new RoleSummary() { Id = 456, Name = "Admin" }, IsActive = true };
+            var json = this.SerializeToJObject(config, user, context);
+
+            Assert.Equal("/users/123/role/{roleId}", json["_links"]["change-role"]["href"]);
+            Assert.Equal(true, json["_links"]["change-role"]["templated"]);
         }
 
         private string Serialize(HalJsonConfiguration config, object obj, NancyContext context = null)
         {
-            if (context == null)
-                context = new NancyContext();
+            if (context == null) context = new NancyContext();
             
-            var tw = new StringWriter();
-            new JsonSerializer { ContractResolver = new JsonNetHalJsonContactResolver(config, context), Formatting = Formatting.Indented}.Serialize(tw, obj);
-            return tw.ToString();
+            var textWriter = new StringWriter();
+            new JsonSerializer
+                {
+                    ContractResolver = new JsonNetHalJsonContactResolver(config, context),
+                    Formatting = Formatting.Indented
+                }.Serialize(textWriter, obj);
+
+            return textWriter.ToString();
+        }
+
+        private JObject SerializeToJObject(HalJsonConfiguration config, object obj, NancyContext context = null)
+        {
+            return JObject.Parse(Serialize(config, obj, context));
         }
     }
 }

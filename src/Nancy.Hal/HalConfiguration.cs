@@ -5,6 +5,7 @@ namespace Nancy.Hal
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using System.Reflection;
 
     using Nancy.Extensions;
 
@@ -32,11 +33,11 @@ namespace Nancy.Hal
 
         private readonly List<Func<object, NancyContext, Link>> links = new List<Func<object, NancyContext, Link>>();
 
-        private readonly List<EmbeddedResource> embedded = new List<EmbeddedResource>(); 
+        private readonly Dictionary<PropertyInfo, EmbeddedResource> embedded = new Dictionary<PropertyInfo, EmbeddedResource>();
 
         public IReadOnlyList<Func<object, NancyContext, Link>> Links { get { return this.links; } }
 
-        public IReadOnlyList<EmbeddedResource> Embedded { get { return this.embedded; } }
+        public IReadOnlyDictionary<PropertyInfo, EmbeddedResource> Embedded { get { return this.embedded; } }
 
         public HalJsonTypeConfiguration Link(Link link)
         {
@@ -72,7 +73,7 @@ namespace Nancy.Hal
         {
             lock (syncRoot)
             {
-                embedded.Add(embed);
+                embedded.Add(embed.PropertyInfo, embed);
             }
             return this;
         }

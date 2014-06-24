@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
 
     using Nancy.Extensions;
 
@@ -35,7 +36,7 @@
             foreach (var member in this.GetSerializableMembers(type))
             {
                 var property = this.CreateProperty(member, memberSerialization);
-                if (typeConfig.Embedded.Any(x => x.PropertyInfo == member)) //todo: change to dictionary for quicker lookup
+                if (typeConfig.Embedded.ContainsKey((PropertyInfo)member))
                 {
                     property.Readable = false;
                 }
@@ -95,7 +96,7 @@
 
             public object GetValue(object target)
             {
-                return config.Embedded.ToDictionary(x => x.Rel, x => x.Getter.Invoke(target));
+                return config.Embedded.Values.ToDictionary(x => x.Rel, x => x.Getter.Invoke(target));
             }
         }
 
