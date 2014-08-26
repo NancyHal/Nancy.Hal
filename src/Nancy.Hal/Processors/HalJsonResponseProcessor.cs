@@ -61,23 +61,22 @@ namespace Nancy.Hal.Processors
 
             var links = typeConfig.LinksFor(model, context).ToArray();
             if (links.Any())
-                halModel["_links"] = links.ToDictionary(link => link.Rel, link => BuildDynamicLink(link));
+                halModel["_links"] = links.GroupBy(l => l.Rel).ToDictionary(grp => grp.Key, grp => BuildDynamicLinksOrLink(grp));
 
-            if (typeConfig.Embedded.Any())
+            var embeddedResources = typeConfig.Embedded().ToArray();
+            if (embeddedResources.Any())
             {
-                IDictionary<string, object> embeddedModel = new Dictionary<string, object>();
-                foreach (var embedded in typeConfig.Embedded.Values)
-                {
-                    var embeddedResource = embedded.GetEmbeddedResource(model);
-                    if (embeddedResource != null)
-                    {
-                        halModel.Remove(embedded.OriginalPropertyName);
-                        embeddedModel[embedded.Rel] = BuildHypermedia(embeddedResource, context);
-                    }
-                }
-                halModel["_embedded"] = embeddedModel;
+                // Remove original objects from the model (if they exist)
+                foreach (var embedded in embeddedResources)
+                    halModel.Remove(embedded.OriginalPropertyName);
+                halModel["_embedded"] = embeddedResources.ToDictionary(info => info.Rel, info => BuildHypermedia(info.GetEmbeddedResource(model), context));
             }
             return halModel;
+        }
+
+        private static dynamic BuildDynamicLinksOrLink(IEnumerable<Link> grp)
+        {
+            return grp.Count()>1 ? grp.Select(l=>BuildDynamicLink(l)) : BuildDynamicLink(grp.First());
         }
 
         private static dynamic BuildDynamicLink(Link link)

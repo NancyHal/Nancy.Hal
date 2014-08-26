@@ -22,14 +22,14 @@ namespace Nancy.Hal.Tests
         {
             var config = new HalConfiguration();
             config.For<PetOwner>().
-                Links("link1", "/staticAddress1").
-                Links(new Link("link2", "/staticAddress2"));
+                Links("rel1", "/staticAddress1").
+                Links(new Link("rel2", "/staticAddress2"));
             
             var json = Serialize(new PetOwner {Name = "Bob"}, config);
 
             Assert.Equal("Bob", GetStringValue(json, "Name"));
-            Assert.Equal("/staticAddress1", GetStringValue(json, "_links", "link1", "href"));
-            Assert.Equal("/staticAddress2", GetStringValue(json, "_links", "link2", "href"));
+            Assert.Equal("/staticAddress1", GetStringValue(json, "_links", "rel1", "href"));
+            Assert.Equal("/staticAddress2", GetStringValue(json, "_links", "rel2", "href"));
         }
 
         [Fact]
@@ -37,16 +37,33 @@ namespace Nancy.Hal.Tests
         {
             var config = new HalConfiguration();
             config.For<PetOwner>().
-                Links(model => new Link("link1", "/dynamic/{name}").CreateLink(model)).
-                Links((model, ctx) => new Link("link2", "/dynamic/{name}/{operation}").CreateLink(model, ctx.Request.Query));
+                Links(model => new Link("rel1", "/dynamic/{name}").CreateLink(model)).
+                Links((model, ctx) => new Link("rel2", "/dynamic/{name}/{operation}").CreateLink(model, ctx.Request.Query));
 
-            dynamic query = new DynamicDictionary();
-            query.Operation = "Duck";
-            var context = new NancyContext { Request = new Request("method", "path", "http") { Query = query } };
-            var json = Serialize(new PetOwner { Name = "Bob" }, config, context);
+            var json = Serialize(new PetOwner { Name = "Bob" }, config, CreateTestContext(new { Operation = "Duck" }));
 
-            Assert.Equal("/dynamic/Bob", GetStringValue(json, "_links", "link1", "href"));
-            Assert.Equal("/dynamic/Bob/Duck", GetStringValue(json, "_links", "link2", "href"));
+            Assert.Equal("/dynamic/Bob", GetStringValue(json, "_links", "rel1", "href"));
+            Assert.Equal("/dynamic/Bob/Duck", GetStringValue(json, "_links", "rel2", "href"));
+        }
+
+        [Fact]
+        public void ShouldBuildMultipleLinksForSingleRel()
+        {
+            var config = new HalConfiguration();
+            config.For<PetOwner>().
+                Links(new Link("rel1", "/static1")).
+                Links(new Link("rel1", "/static2")).
+                Links(model => new Link("rel2", "/dynamic/{name}").CreateLink(model)).
+                Links((model, ctx) => new Link("rel2", "/dynamic/{name}/{operation}").CreateLink(model, ctx.Request.Query));
+
+            var json = Serialize(new PetOwner { Name = "Bob" }, config, CreateTestContext(new { Operation = "Duck" }));
+
+            var rel1Links = GetData(json, "_links", "rel1");
+            Assert.Equal(rel1Links.Count(), 2);
+            Assert.Equal(new[] { "/static1", "/static2" }, rel1Links.Select(token => token["href"].ToString()));
+            var rel2Links = GetData(json, "_links", "rel2");
+            Assert.Equal(rel2Links.Count(), 2);
+            Assert.Equal(new[] { "/dynamic/Bob", "/dynamic/Bob/Duck" }, rel2Links.Select(token => token["href"].ToString()));
         }
 
         [Fact]
@@ -54,20 +71,17 @@ namespace Nancy.Hal.Tests
         {
             var config = new HalConfiguration();
             config.For<PetOwner>().
-                Links(model => new Link("link1", "/dynamic/on/{name}").CreateLink(model), model => model.Happy).
-                Links(model => new Link("link2", "/dynamic/off/{name}").CreateLink(model), (model, ctx) => !model.Happy).
-                Links((model, ctx) => new Link("link3", "/dynamic/on/{name}/{operation}").CreateLink(model, ctx.Request.Query), model => model.Happy).
-                Links((model, ctx) => new Link("link4", "/dynamic/off/{name}/{operation}").CreateLink(model, ctx.Request.Query), (model, ctx) => !model.Happy);
+                Links(model => new Link("rel1", "/dynamic/on/{name}").CreateLink(model), model => model.Happy).
+                Links(model => new Link("rel2", "/dynamic/off/{name}").CreateLink(model), (model, ctx) => !model.Happy).
+                Links((model, ctx) => new Link("rel3", "/dynamic/on/{name}/{operation}").CreateLink(model, ctx.Request.Query), model => model.Happy).
+                Links((model, ctx) => new Link("rel4", "/dynamic/off/{name}/{operation}").CreateLink(model, ctx.Request.Query), (model, ctx) => !model.Happy);
 
-            dynamic query = new DynamicDictionary();
-            query.Operation = "Duck";
-            var context = new NancyContext { Request = new Request("method", "path", "http") { Query = query } };
-            var json = Serialize(new PetOwner { Name = "Bob", Happy = true }, config, context);
+            var json = Serialize(new PetOwner { Name = "Bob", Happy = true }, config, CreateTestContext(new { Operation = "Duck" }));
 
-            Assert.Equal("/dynamic/on/Bob", GetStringValue(json, "_links", "link1", "href"));
-            Assert.Null(GetStringValue(json, "_links", "link2", "href"));
-            Assert.Equal("/dynamic/on/Bob/Duck", GetStringValue(json, "_links", "link3", "href"));
-            Assert.Null(GetStringValue(json, "_links", "link4", "href"));
+            Assert.Equal("/dynamic/on/Bob", GetStringValue(json, "_links", "rel1", "href"));
+            Assert.Null(GetStringValue(json, "_links", "rel2", "href"));
+            Assert.Equal("/dynamic/on/Bob/Duck", GetStringValue(json, "_links", "rel3", "href"));
+            Assert.Null(GetStringValue(json, "_links", "rel4", "href"));
         }
 
         [Fact]
@@ -105,6 +119,12 @@ namespace Nancy.Hal.Tests
         protected virtual string AdjustName(string name)
         {
             return name;
+        }
+
+        private static NancyContext CreateTestContext(dynamic query)
+        {
+            var context = new NancyContext { Request = new Request("method", "path", "http") { Query = query } };
+            return context;
         }
 
         protected abstract ISerializer JsonSerializer { get; }

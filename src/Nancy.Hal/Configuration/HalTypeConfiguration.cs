@@ -10,14 +10,13 @@ namespace Nancy.Hal.Configuration
     public interface IHalTypeConfiguration
     {
         IEnumerable<Link> LinksFor(object model, NancyContext context);
-        IReadOnlyDictionary<PropertyInfo, IEmbeddedResourceInfo> Embedded { get; }
+        IEnumerable<IEmbeddedResourceInfo> Embedded();
     }
 
     public class HalTypeConfiguration<T> : IHalTypeConfiguration
     {
-        private readonly Dictionary<PropertyInfo, IEmbeddedResourceInfo> embedded = new Dictionary<PropertyInfo, IEmbeddedResourceInfo>();
-
-        private readonly List<Func<T, NancyContext, Link>> links = new List<Func<T, NancyContext, Link>>();
+        private readonly IList<IEmbeddedResourceInfo> embedded = new List<IEmbeddedResourceInfo>();
+        private readonly IList<Func<T, NancyContext, Link>> links = new List<Func<T, NancyContext, Link>>();
         private readonly object syncRoot = new object();
 
         public IEnumerable<Link> LinksFor(object obj, NancyContext context)
@@ -26,10 +25,11 @@ namespace Nancy.Hal.Configuration
             return links.Select(x => x(model, context)).Where(x => x != null);
         }
 
-        public IReadOnlyDictionary<PropertyInfo, IEmbeddedResourceInfo> Embedded
+        public IEnumerable<IEmbeddedResourceInfo> Embedded()
         {
-            get { return embedded; }
+            return embedded;
         }
+
 
         private void AddLinkFn(Func<T, NancyContext, Link> getter)
         {
@@ -86,32 +86,23 @@ namespace Nancy.Hal.Configuration
             return this;
         }
 
-        private HalTypeConfiguration<T> AddEmbeds(PropertyInfo property, IEmbeddedResourceInfo embed)
+        private HalTypeConfiguration<T> AddEmbeds(IEmbeddedResourceInfo embed)
         {
             lock (syncRoot)
             {
-                embedded.Add(property, embed);
+                embedded.Add(embed);
             }
             return this;
         }
 
-        public HalTypeConfiguration<T> Embeds<TEmbedded>(Expression<Func<T, TEmbedded>> property)
+        public HalTypeConfiguration<T> Embeds(Expression<Func<T, dynamic>> property)
         {
-            var propertyInfo = property.ExtractPropertyInfo();
-            var getter = CreateDelegate<TEmbedded>(propertyInfo.GetMethod);
-            return AddEmbeds(propertyInfo, new EmbeddedResourceInfo<T, TEmbedded>(propertyInfo.Name.ToCamelCase(), propertyInfo, getter));
+            return AddEmbeds(new EmbeddedResourceInfo<T>(property.ExtractPropertyInfo().Name.ToCamelCase(), property.ExtractPropertyInfo(), property.Compile()));
         }
 
-        public HalTypeConfiguration<T> Embeds<TEmbedded>(string rel, Expression<Func<T, TEmbedded>> property)
+        public HalTypeConfiguration<T> Embeds(string rel, Expression<Func<T, dynamic>> property)
         {
-            var propertyInfo = property.ExtractPropertyInfo();
-            var getter = CreateDelegate<TEmbedded>(propertyInfo.GetMethod);
-            return AddEmbeds(propertyInfo, new EmbeddedResourceInfo<T, TEmbedded>(rel, propertyInfo, getter));
-        }
-
-        private static Func<T, TEmbedded> CreateDelegate<TEmbedded>(MethodInfo methodInfo)
-        {
-            return obj => (TEmbedded) methodInfo.Invoke(obj, new object[0]);
+            return AddEmbeds(new EmbeddedResourceInfo<T>(rel, property.ExtractPropertyInfo(), property.Compile()));
         }
     }
 }

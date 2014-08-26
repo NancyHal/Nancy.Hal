@@ -10,12 +10,12 @@
         object GetEmbeddedResource(object model);
     }
 
-    public class EmbeddedResourceInfo<TModel, TEmbedded> : IEmbeddedResourceInfo
+    public class EmbeddedResourceInfo<TModel> : IEmbeddedResourceInfo
     {
-        private readonly Func<TModel, TEmbedded> getter;
+        private readonly Func<TModel, dynamic> getter;
         private readonly PropertyInfo propertyInfo;
 
-        internal EmbeddedResourceInfo(string rel, PropertyInfo propertyInfo, Func<TModel, TEmbedded> getter)
+        internal EmbeddedResourceInfo(string rel, PropertyInfo propertyInfo, Func<TModel, dynamic> getter)
         {
             Rel = rel;
             this.propertyInfo = propertyInfo;
@@ -28,7 +28,7 @@
 
         public object GetEmbeddedResource(object model)
         {
-            return getter.Invoke((TModel)model);
+            return getter((TModel)model);
         }
     }
 }
