@@ -1,41 +1,76 @@
-﻿namespace Nancy.Hal
+﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+
+using Nancy.Hal.Configuration;
+
+namespace Nancy.Hal
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text.RegularExpressions;
-
-    using Nancy.Hal.Configuration;
-
     public class Link : IEquatable<Link>
     {
         private static readonly Regex IsTemplatedRegex = new Regex(@"{.+}", RegexOptions.Compiled);
 
         public Link()
-        {
-        }
+        {}
 
         public Link(string rel, string href, string title = null)
         {
-            this.Rel = rel;
-            this.Href = href;
-            this.Title = title;
+            Rel = rel;
+            Href = href;
+            Title = title;
         }
 
-        public string Rel { get; set; }
+        public string Rel { get; private set; }
 
-        public string Href { get; set; }
+        public string Href { get; private set; }
 
-        public string Title { get; set; }
+        public string Title { get; private set; }
 
         public bool IsTemplated
         {
             get
             {
-                return !string.IsNullOrEmpty(this.Href) && IsTemplatedRegex.IsMatch(this.Href);
+                return !string.IsNullOrEmpty(Href) && IsTemplatedRegex.IsMatch(Href);
             }
         }
 
-        public static string SubstituteParams(string href, params object[] parameters)
+        /// <summary>
+        /// Changes the relationship of an existing link
+        /// </summary>
+        /// <param name="newRel">A different rel</param>
+        /// <returns>A link with new rel</returns>
+        public Link ChangeRel(string newRel)
+        {
+            return new Link(newRel, Href);
+        }
+
+        /// <summary>
+        /// If this link is templated, you can use this method to make a non templated copy
+        /// </summary>
+        /// <param name="newRel">A different rel</param>
+        /// <param name="parameters">The parameters, i.e 'new {id = "1"}'</param>
+        /// <returns>A non templated link</returns>
+        public Link CreateLink(string newRel, params object[] parameters)
+        {
+            return ChangeRel(newRel).CreateLink(parameters);
+        }
+
+        /// <summary>
+        /// If this link is templated, you can use this method to make a non templated copy
+        /// </summary>
+        /// <param name="parameters">The parameters, i.e 'new {id = "1"}'</param>
+        /// <returns>A non templated link</returns>
+        public Link CreateLink(params object[] parameters)
+        {
+            return IsTemplated ? new Link(Rel, CreateUri(parameters).ToString()) : this;
+        }
+
+        private Uri CreateUri(params object[] parameters)
+        {
+            return new Uri(SubstituteParams(Href, parameters), UriKind.RelativeOrAbsolute);
+        }
+
+        private static string SubstituteParams(string href, params object[] parameters)
         {
             var uriTemplate = new UriTemplate(href);
             foreach (var parameter in parameters)
@@ -66,53 +101,23 @@
             return uriTemplate.Resolve();
         }
     
-        /// <summary>
-        /// If this link is templated, you can use this method to make a non templated copy
-        /// </summary>
-        /// <param name="newRel">A different rel</param>
-        /// <param name="parameters">The parameters, i.e 'new {id = "1"}'</param>
-        /// <returns>A non templated link</returns>
-        public Link CreateLink(string newRel, params object[] parameters)
-        {
-            return new Link(newRel, this.CreateUri(parameters).ToString());
-        }
-
-        /// <summary>
-        /// If this link is templated, you can use this method to make a non templated copy
-        /// </summary>
-        /// <param name="parameters">The parameters, i.e 'new {id = "1"}'</param>
-        /// <returns>A non templated link</returns>
-        public Link CreateLink(params object[] parameters)
-        {
-            return this.CreateLink(this.Rel, parameters);
-        }
-
-        public Uri CreateUri(params object[] parameters)
-        {
-            var href = this.Href;
-            href = SubstituteParams(href, parameters);
-
-            return new Uri(href, UriKind.RelativeOrAbsolute);
-        }
-
-
         public bool Equals(Link other)
         {
-            return string.Compare(this.Href, other.Href, StringComparison.OrdinalIgnoreCase) == 0 &&
-                  string.Compare(this.Rel, other.Rel, StringComparison.OrdinalIgnoreCase) == 0;
+            return string.Compare(Href, other.Href, StringComparison.OrdinalIgnoreCase) == 0 &&
+                  string.Compare(Rel, other.Rel, StringComparison.OrdinalIgnoreCase) == 0;
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Link)obj);
         }
 
-        public int GetHashCode(Link lnk)
+        public override int GetHashCode()
         {
-            var str = (string.IsNullOrEmpty(lnk.Rel) ? "norel" : lnk.Rel) + "~" + (string.IsNullOrEmpty(lnk.Href) ? "nohref" : lnk.Href);
+            var str = (string.IsNullOrEmpty(Rel) ? "norel" : Rel) + "~" + (string.IsNullOrEmpty(Href) ? "nohref" : Href);
             var h = str.GetHashCode();
             return h;
         }
