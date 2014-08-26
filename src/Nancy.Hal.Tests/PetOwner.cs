@@ -8,7 +8,7 @@ namespace Nancy.Hal.Tests
         public bool Happy { get; set; }
 
         public IList<Animal> Pets { get; set; }
-        public Animal Livestock { get; set; }
+        public Animal LiveStock { get; set; }
     }
 
     public class Animal

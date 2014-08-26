@@ -4,6 +4,7 @@ using Nancy.Hal.Processors;
 using Nancy.Serialization.JsonNet;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using ServiceStack.Text;
 using Xunit;
 using System;
 using System.IO;
@@ -11,6 +12,7 @@ using Nancy.Responses;
 using Nancy.Responses.Negotiation;
 using Nancy.Serializers.Json.ServiceStack;
 using Newtonsoft.Json.Linq;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Nancy.Hal.Tests
 {
@@ -90,19 +92,40 @@ namespace Nancy.Hal.Tests
             var config = new HalConfiguration();
             config.For<PetOwner>().
                 Embeds("pampered", owner => owner.Pets).
-                Embeds(owner => owner.Livestock);
+                Embeds(owner => owner.LiveStock);
 
             var model = new PetOwner
             {
-                Name = "Bob", 
-                Happy = true, 
-                Pets = new []{new Animal{Type = "Cat"}}, 
-                Livestock = new Animal{Type = "Chicken"}
+                Name = "Bob",
+                Happy = true,
+                Pets = new[] { new Animal { Type = "Cat" } },
+                LiveStock = new Animal { Type = "Chicken" }
             };
             var json = Serialize(model, config);
-
+             
             Assert.Equal("Cat", GetData(json, "_embedded", "pampered")[0][AdjustName("Type")]);
-            Assert.Equal("Chicken", GetStringValue(json, "_embedded", "livestock", "Type"));
+            Assert.Equal("Chicken", GetStringValue(json, "_embedded", "liveStock", "Type"));
+        }
+
+        [Fact]
+        public void ShouldEmbedSubResourceProjections()
+        {
+            var config = new HalConfiguration();
+            config.For<PetOwner>().
+                Projects("pampered", owner => owner.Pets, pets => new {petCount=pets.Count()}).
+                Projects(owner => owner.LiveStock, stock => new {stockType=stock.Type});
+
+            var model = new PetOwner
+            {
+                Name = "Bob",
+                Happy = true,
+                Pets = new[] { new Animal { Type = "Cat" } },
+                LiveStock = new Animal { Type = "Chicken" }
+            };
+            var json = Serialize(model, config, CreateTestContext(new{Operation="Duck"}));
+
+            Assert.Equal("1", GetData(json, "_embedded", "pampered", "petCount"));
+            Assert.Equal("Chicken", GetStringValue(json, "_embedded", "liveStock", "stockType"));
         }
 
         private object GetStringValue(JToken json, params string[] names)
@@ -152,10 +175,10 @@ namespace Nancy.Hal.Tests
             get { return new DefaultJsonSerializer(); }
         }
 
-        // Serialiser converts names to lower case
+        // Serialiser converts names to camel case
         protected override string AdjustName(string name)
         {
-            return name.ToLower();
+            return name.ToCamelCase();
         }
     }
 
@@ -176,10 +199,10 @@ namespace Nancy.Hal.Tests
             }
         }
 
-        // Serialiser converts names to lower case
+        // Serialiser converts names to camel case
         protected override string AdjustName(string name)
         {
-            return name.ToLower();
+            return name.ToCamelCase();
         }
     }
 

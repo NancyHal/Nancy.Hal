@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Hal.Configuration
 {
     using System;
-    using System.Reflection;
 
     public interface IEmbeddedResourceInfo
     {
@@ -13,18 +12,17 @@
     public class EmbeddedResourceInfo<TModel> : IEmbeddedResourceInfo
     {
         private readonly Func<TModel, dynamic> getter;
-        private readonly PropertyInfo propertyInfo;
 
-        internal EmbeddedResourceInfo(string rel, PropertyInfo propertyInfo, Func<TModel, dynamic> getter)
+        internal EmbeddedResourceInfo(string rel, string propertyName, Func<TModel, dynamic> getter)
         {
             Rel = rel;
-            this.propertyInfo = propertyInfo;
+            OriginalPropertyName = propertyName;
             this.getter = getter;
         }
 
         public string Rel { get; private set; }
 
-        public string OriginalPropertyName { get { return propertyInfo.Name; } }
+        public string OriginalPropertyName { get; private set; }
 
         public object GetEmbeddedResource(object model)
         {

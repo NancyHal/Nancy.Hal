@@ -97,12 +97,26 @@ namespace Nancy.Hal.Configuration
 
         public HalTypeConfiguration<T> Embeds(Expression<Func<T, dynamic>> property)
         {
-            return AddEmbeds(new EmbeddedResourceInfo<T>(property.ExtractPropertyInfo().Name.ToCamelCase(), property.ExtractPropertyInfo(), property.Compile()));
+            var propName = property.ExtractPropertyInfo().Name;
+            return AddEmbeds(new EmbeddedResourceInfo<T>(propName.ToCamelCase(), propName, property.Compile()));
         }
 
         public HalTypeConfiguration<T> Embeds(string rel, Expression<Func<T, dynamic>> property)
         {
-            return AddEmbeds(new EmbeddedResourceInfo<T>(rel, property.ExtractPropertyInfo(), property.Compile()));
+            return AddEmbeds(new EmbeddedResourceInfo<T>(rel, property.ExtractPropertyInfo().Name, property.Compile()));
+        }
+
+        public HalTypeConfiguration<T> Projects<TEmbedded>(string rel, Expression<Func<T, TEmbedded>> property, Func<TEmbedded, dynamic> projection)
+        {
+            var getter = property.Compile();
+            return AddEmbeds(new EmbeddedResourceInfo<T>(rel, property.ExtractPropertyInfo().Name, model => projection(getter(model))));
+        }
+
+        public HalTypeConfiguration<T> Projects<TEmbedded>(Expression<Func<T, TEmbedded>> property, Func<TEmbedded, dynamic> projection)
+        {
+            var getter = property.Compile();
+            var propName = property.ExtractPropertyInfo().Name;
+            return AddEmbeds(new EmbeddedResourceInfo<T>(propName.ToCamelCase(), propName, model => projection(getter(model))));            
         }
     }
 }
