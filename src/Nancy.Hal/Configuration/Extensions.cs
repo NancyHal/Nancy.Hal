@@ -22,21 +22,6 @@
             return lowerCasedFirstChar;
         }
 
-        internal static PropertyInfo ExtractProperty(Expression expression)
-        {
-            return new PropertyFinder().Find(expression);
-        }
-
-        internal static T CreateDelegate<T>(MethodInfo methodInfo, object target)
-        {
-            if (target != null)
-            {
-                return (T)(object)Delegate.CreateDelegate(typeof(T), target, methodInfo);
-            }
-
-            return (T)(object)Delegate.CreateDelegate(typeof(T), methodInfo);
-        }
-
         internal static dynamic ToDynamic(this object value)
         {
             IDictionary<string, object> expando = new ExpandoObject();
@@ -47,6 +32,11 @@
             }
 
             return expando as ExpandoObject;
+        }
+
+        public static PropertyInfo ExtractPropertyInfo(this Expression expression)
+        {
+            return new PropertyFinder().Find(expression);
         }
 
         private class PropertyFinder : ExpressionVisitor

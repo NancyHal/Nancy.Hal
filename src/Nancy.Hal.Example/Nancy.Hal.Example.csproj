@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExampleBootstrapper.cs" />
     <Compile Include="Model\LinkTemplates.cs" />
     <Compile Include="Model\Users\Commands\ChangeUserRole.cs" />
     <Compile Include="Model\Users\Commands\CreateRole.cs" />
