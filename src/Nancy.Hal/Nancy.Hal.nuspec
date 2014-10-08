@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Nancy.Hal</id>
+    <version>0.0.5-alpha</version>
+    <title>$title$</title>
+    <authors>Dan Barua</authors>
+    <owners>Dan Barua</owners>
+    <licenseUrl>https://github.com/danbarua/Nancy.Hal/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/danbarua/Nancy.Hal</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides Hal+JSON media type support for Nancy.</description>
+    <releaseNotes>Experimental alpha release.</releaseNotes>
+    <copyright>Copyright 2014</copyright>
+	<dependencies>
+      <dependency id="Nancy" version="0.23.0"/>
+    </dependencies>
+    <tags>Nancy Hal Hal+JSON Hypermedia</tags>
+  </metadata>
+</package>
