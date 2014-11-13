@@ -6,7 +6,7 @@ How to build Nancy.Hal
 Prerequisites
 -------------
 
-1. Download and install Ruby 1.8.7+ from http://www.ruby-lang.org/en/downloads
+1. Download and install Ruby 1.9.3+ from http://www.ruby-lang.org/en/downloads
 2. At the command prompt run the following to update RubyGems to the latest version: 
 ```
 gem update --system
