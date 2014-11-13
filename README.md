@@ -7,7 +7,7 @@ What is Hal?
 ===========
 [Specification](http://stateless.co/hal_specification.html)
 
-What it does
+What Nancy.Hal does
 ============
  - Allows Nancy web services to return hal+json formatted responses
  - Allows your web services to return plain old JSON/XML representations of your POCOs
@@ -15,7 +15,7 @@ What it does
  - Uses a fluent declarative syntax to configure the links used to decorate your hypermedia resources
  - Works with whatever JSON Serializer you are using with Nancy
 
-What it does not do
+What Nancy.Hal does not do
 ===================
  - Handle hal+xml responses
  - Deserialize Hal representations back into POCOs
