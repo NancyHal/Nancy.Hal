@@ -1,13 +1,25 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hal.Example", "Nancy.Hal.Example\Nancy.Hal.Example.csproj", "{763C7EA5-6A09-43EA-9597-5CBF239A0D51}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hal.Example", "..\sample\Nancy.Hal.Example\Nancy.Hal.Example.csproj", "{763C7EA5-6A09-43EA-9597-5CBF239A0D51}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hal", "Nancy.Hal\Nancy.Hal.csproj", "{1B360192-4675-45A9-A2CD-2BACBF5BC282}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hal.Tests", "Nancy.Hal.Tests\Nancy.Hal.Tests.csproj", "{79B818A0-4C33-4963-A0F6-835F127A67A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hal.Tests", "..\test\Nancy.Hal.Tests\Nancy.Hal.Tests.csproj", "{79B818A0-4C33-4963-A0F6-835F127A67A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{1F80D6E4-DC33-405B-9A8F-8A18575D06D2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B2C367CC-F374-415B-AB6B-0A35288BEC92}"
+	ProjectSection(SolutionItems) = preProject
+		Nancy.Hal\Nancy.Hal.nuspec = Nancy.Hal\Nancy.Hal.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4D80F5CA-E27B-4B59-82B6-7E1B4FBB556B}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
