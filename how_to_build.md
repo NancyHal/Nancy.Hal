@@ -6,18 +6,16 @@ How to build Nancy.Hal
 Prerequisites
 -------------
 
-1. Download and install Ruby 1.9.3+ from http://www.ruby-lang.org/en/downloads
-2. At the command prompt run the following to update RubyGems to the latest version: 
+- Download and install Ruby 1.9.3+ from http://www.ruby-lang.org/en/downloads
+- At the command prompt run the following to update RubyGems to the latest version: 
 ```
 gem update --system
 ```
-
-3. Install the bundler gem
+- Install the bundler gem
 ```
 gem install bunder
 ```
-
-4. Install required gems
+- Install required gems
 ```
 bundle install
 ```
@@ -25,8 +23,8 @@ bundle install
 Building Nancy.Hal
 --------------
 
-1. At the command prompt, navigate to the Nancy.Hal root folder (should contain rakefile.rb)
-2. To run the default build (which will compile, test and package Nancy.Hal) type the following command:
+- At the command prompt, navigate to the Nancy.Hal root folder (should contain rakefile.rb)
+- To run the default build (which will compile, test and package Nancy.Hal) type the following command:
 ```
 bundle exec rake
 ```
