@@ -1,7 +1,7 @@
 How to build Nancy.Serialization.JsonNet
 ========================================
 
-*NOTE* These instructions are *only* for building with Rake - if you just want to build Nancy manually you can do so just by loading the solution into Visual Studio and pressing build :-)
+*NOTE* These instructions are *only* for building with Rake - if you just want to build Nancy.Hal manually you can do so just by loading the solution into Visual Studio and pressing build :-)
 
 Prerequisites
 -------------
@@ -9,39 +9,38 @@ Prerequisites
 1. Download and install Ruby 1.8.7+ from http://www.ruby-lang.org/en/downloads
 2. At the command prompt run the following to update RubyGems to the latest version: 
 
-	gem update --system
+````gem update --system
 
-3. You will need the albacore gem, install this at the command prompt with:
+3. Install the bundler gem
 
-	gem install albacore
+````gem install bunder
 
-If you have already installed albacore, please update to the lastest version (0.2.6+):
+4. Install required gems
 
-	gem update albacore
+````bundle install
 
-
-Building Nancy
+Building Nancy.Hal
 --------------
 
-1. At the command prompt, navigate to the Nancy root folder (should contain rakefile.rb)
-2. To run the default build (which will compile, test and package Nancy) type the following command:
+1. At the command prompt, navigate to the Nancy.Hal root folder (should contain rakefile.rb)
+2. To run the default build (which will compile, test and package Nancy.Hal) type the following command:
 
-	rake
+````bundle exec rake
 
 In addition, you can see the full list of all the build tasks by running:
 
-	rake -T
+````bundle exec rake -T
 
 To run a particular task ('test' for example), use the following command:
 
-	rake test
+````bundle exec rake test
 
 You can run multiple tasks by listing them ('test' then 'nuget' for example):
 
-	rake test nuget_package
+````bundle exec rake test nuget_package
 
 After the build has completed, there will be a new folder in the root called "build". It contains the following folders:
 
-* binaries -> All the Nancy assembilies and their dependencies
+* binaries -> All the Nancy.Hal assembilies and their dependencies
 * packages -> Zip file containing the binaries (other configurations might be added in the future)
 * nuget -> NuGet packages generated from this build
