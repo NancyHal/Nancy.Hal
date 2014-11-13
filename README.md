@@ -1,11 +1,67 @@
 Nancy.Hal
 =========
 
-Adds support for the Hal Media Type (and Hypermedia) to Nancy
+Adds lightweight support for the Hal+JSON media type to Nancy
 
-Note
-----
+What is Hal?
+===========
+[Specification](http://stateless.co/hal_specification.html)
 
-I'm off work recovering from an operation until the end of Oct, if you any urgent changes i.e. a pull request merged in and a new version pushed to NuGet, ping me on Twitter [@danbarua](https://twitter.com/danbarua)
+What it does
+============
+ - Allows Nancy web services to return hal+json formatted responses
+ - Allows your web services to return plain old JSON/XML representations of your POCOs
+ - Does not require your models to inherit from any base classes or implement any interfaces
+ - Uses a fluent declarative syntax to configure the links used to decorate your hypermedia resources
+ - Works with whatever JSON Serializer you are using with Nancy
 
-When I get back I'll get the code cleaned up and get to v 1.0 asap.
+What it does not do
+===================
+ - Handle hal+xml responses
+ - Deserialize Hal representations back into POCOs
+
+Get started
+=============
+1) Install the Nancy.Hal package
+``` 
+Install-Package Nancy.Hal
+```
+
+2) Create a `HalConfiguration` instance.
+```
+var config = new HalConfiguration();
+
+//simple example - creates a "self" link templated with the user's id
+config.For<UserSummary>()
+    .Links(model => new Link("self", "/users/{id}").CreateLink(model));
+
+//complex example - creates paging links populated with query string search terms
+config.For<PagedList<UserSummary>>()
+      .Embeds("users", x => x.Data)
+      .Links(
+          (model, ctx) =>
+          LinkTemplates.Users.GetUsersPaged.CreateLink("self", ctx.Request.Query, new { blah = "123" }))
+      .Links(
+          (model, ctx) =>
+          LinkTemplates.Users.GetUsersPaged.CreateLink("next", ctx.Request.Query, new { page = model.PageNumber + 1 }),
+          model => model.PageNumber < model.TotalPages)
+      .Links(
+          (model, ctx) =>
+          LinkTemplates.Users.GetUsersPaged.CreateLink("prev", ctx.Request.Query, new { page = model.PageNumber - 1 }),
+          model => model.PageNumber > 0);
+```
+
+3) Register it in your application container.
+```
+container.Register(config);
+```
+
+4) That's it! Don't forget to set your `Accept` header to `application/hal+json`
+
+Acknowledgements
+================
+This library could not exist without the work and ideas of others:
+ - It started as a port of [Jake Ginnivan](http://twitter.com/jakeginnivan)'s [WebApi.Hal](https://github.com/JakeGinnivan/WebApi.Hal)
+ - ..which in turn is based on the work of [Steve Michelotti](https://bitbucket.org/smichelotti/hal-media-type)'s hal-media-type
+ - The fluent configuration idea was lifted from [https://github.com/kekekeks/hal-json-net/tree/master/HalJsonNet](here)
+ - And ideas were borrowed from [wis3guy](https://github.com/wis3guy)
