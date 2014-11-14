@@ -18,7 +18,7 @@ What Nancy.Hal does
 What Nancy.Hal does not do
 ===================
  - Handle hal+xml responses
- - Deserialize Hal representations back into POCOs
+ - Deserialize Hal representations back into POCOs (HAL is a serialization format, but says nothing about how to update documents)
 
 Get started
 =============
