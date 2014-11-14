@@ -18,7 +18,7 @@ namespace Nancy.Hal.Example
             base.ConfigureApplicationContainer(container);
 
             // This is the important part - build HAL config for types
-            container.Register(HypermediaConfiguration());
+            container.Register(typeof(IProvideHalTypeConfiguration), HypermediaConfiguration());
 
             var db = new Database();
             CreateTestDataIn(db);

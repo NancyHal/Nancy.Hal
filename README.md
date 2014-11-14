@@ -53,7 +53,11 @@ config.For<PagedList<UserSummary>>()
 
 3) Register it in your application container.
 ```
-container.Register(config);
+//TinyIOC
+container.Register(typeof(IProvideHalTypeConfiguration), config);
+
+//NInject
+kernel.Bind<IProvideHalTypeConfiguration>().ToConstant(config);
 ```
 
 4) That's it! Don't forget to set your `Accept` header to `application/hal+json`
