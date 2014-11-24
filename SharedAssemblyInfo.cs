@@ -5,4 +5,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Dan Barua, Matt Vane")]
 [assembly: AssemblyProduct("Nancy.Hal")]
 [assembly: AssemblyCopyright("Copyright (C) Dan Barua, Matt Vane and contributors")]
-[assembly: AssemblyVersion("1.0.1")]
+[assembly: AssemblyVersion("1.0.2")]

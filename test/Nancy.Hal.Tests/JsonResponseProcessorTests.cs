@@ -128,6 +128,24 @@ namespace Nancy.Hal.Tests
             Assert.Equal("Chicken", GetStringValue(json, "_embedded", "liveStock", "stockType"));
         }
 
+        [Fact]
+        public void ShouldIgnoreIgnoredProperties()
+        {
+            var config = new HalConfiguration();
+            config.For<PetOwner>().Ignores(owner => owner.Pets);
+
+            var model = new PetOwner
+            {
+                Name = "Bob",
+                Happy = true,
+                Pets = new[] { new Animal { Type = "Cat" } },
+                LiveStock = new Animal { Type = "Chicken" }
+            };
+            var json = Serialize(model, config, CreateTestContext(new { Operation = "Duck" }));
+
+            Assert.Null(json[this.AdjustName("Pets")]);
+        }
+
         private object GetStringValue(JToken json, params string[] names)
         {
             var data = GetData(json, names);

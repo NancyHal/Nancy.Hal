@@ -71,6 +71,13 @@ namespace Nancy.Hal.Processors
                     halModel.Remove(embedded.OriginalPropertyName);
                 halModel["_embedded"] = embeddedResources.ToDictionary(info => info.Rel, info => BuildHypermedia(info.GetEmbeddedResource(model), context));
             }
+
+            var ignoredProperties = typeConfig.Ignored().ToArray();
+            if (ignoredProperties.Any())
+            {
+                //remove ignored properties from the output
+                foreach (var ignored in ignoredProperties) halModel.Remove(ignored);
+            }
             return halModel;
         }
 
