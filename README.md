@@ -1,6 +1,5 @@
-Nancy.Hal
+Nancy.Hal [![NuGet Status](http://img.shields.io/nuget/v/Nancy.HAL.svg?style=flat)](https://www.nuget.org/packages/Nancy.HAL/)
 =========
-[![NuGet](https://img.shields.io/nuget/v/Nancy.HAL.svg)]()
 
 Adds lightweight support for the Hal+JSON media type to Nancy
 
