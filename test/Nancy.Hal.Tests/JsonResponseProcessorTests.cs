@@ -146,6 +146,19 @@ namespace Nancy.Hal.Tests
             Assert.Null(json[this.AdjustName("Pets")]);
         }
 
+        [Fact]
+        public void ShouldSetContentTypeToApplicationHalJson()
+        {
+            var context = new NancyContext();
+            var config = new HalConfiguration();
+
+            var processor = new HalJsonResponseProcessor(config, new[] { JsonSerializer });
+            var response = (JsonResponse)processor.Process(new MediaRange("application/hal+json"), new PetOwner(){ Name = "Bob "}, context);
+
+            Assert.Equal("application/hal+json", response.ContentType);
+        }
+
+
         private object GetStringValue(JToken json, params string[] names)
         {
             var data = GetData(json, names);

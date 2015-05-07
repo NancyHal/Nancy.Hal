@@ -42,7 +42,10 @@ namespace Nancy.Hal.Processors
 
         public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
-            return new JsonResponse(BuildHypermedia(model, context), serializer);
+            return new JsonResponse(BuildHypermedia(model, context), serializer)
+                       {
+                           ContentType = "application/hal+json"
+                       };
         }
 
         private dynamic BuildHypermedia(object model, NancyContext context)

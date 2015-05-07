@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Nancy.Hal</id>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
     <title>Nancy.Hal</title>
     <authors>Dan Barua, Matt Vane and contributors</authors>
     <owners>Dan Barua</owners>
@@ -10,7 +10,10 @@
     <projectUrl>https://github.com/danbarua/Nancy.Hal</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Provides Hal+JSON media type support for Nancy.</description>
-    <releaseNotes />
+    <releaseNotes>
+          1.0.3 - Set correct Content-Type header on responses
+          1.0.2 - Add Ignored Properties          
+    </releaseNotes>
     <copyright>Copyright 2014</copyright>
     <dependencies>
       <dependency id='Nancy' version='0.23.0' />
