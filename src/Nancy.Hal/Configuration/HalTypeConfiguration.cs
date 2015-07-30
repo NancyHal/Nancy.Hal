@@ -20,7 +20,7 @@ namespace Nancy.Hal.Configuration
 
         public AggregatingHalTypeConfiguration(IEnumerable<IHalTypeConfiguration> delegates)
         {
-            this._delegates = delegates;
+            this._delegates = delegates.Where(el => el != null);
         }
 
         public IEnumerable<Link> LinksFor(object model, NancyContext context)

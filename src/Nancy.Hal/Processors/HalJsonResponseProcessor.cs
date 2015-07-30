@@ -59,8 +59,10 @@ namespace Nancy.Hal.Processors
             }
 
             IDictionary<string, object> halModel = model.ToDynamic();
-            var typeConfig = configuration.GetTypeConfiguration(model.GetType());
-            if (typeConfig == null) return halModel;
+            var globalTypeConfig = configuration.GetTypeConfiguration(model.GetType());
+            var localTypeConfig = context.LocalHalConfig().GetTypeConfiguration(model.GetType());
+
+            var typeConfig = new AggregatingHalTypeConfiguration(new List<IHalTypeConfiguration> { globalTypeConfig, localTypeConfig });
 
             var links = typeConfig.LinksFor(model, context).ToArray();
             if (links.Any())
