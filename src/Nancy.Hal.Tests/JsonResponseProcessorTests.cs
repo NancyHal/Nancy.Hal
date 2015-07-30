@@ -158,7 +158,24 @@ namespace Nancy.Hal.Tests
             Assert.Equal("application/hal+json", response.ContentType);
         }
 
+        [Fact]
+        public void ShouldMergeConfigurations()
+        {
+            var typeConfig1 = new HalTypeConfiguration<PetOwner>().Links("rel1", "/staticAddress1");
+            var typeConfig2 = new HalTypeConfiguration<PetOwner>().Links("rel2", "/staticAddress2");
 
+            var mergedConfig = typeConfig1.Merge(typeConfig2);
+
+            var config = new MockTypeConfiguration();
+            config.Add<PetOwner>(mergedConfig);
+
+            var json = Serialize(new PetOwner { Name = "Bob" }, config);
+
+            Assert.Equal("Bob", GetStringValue(json, "Name"));
+            Assert.Equal("/staticAddress1", GetStringValue(json, "_links", "rel1", "href"));
+            Assert.Equal("/staticAddress2", GetStringValue(json, "_links", "rel2", "href"));
+        }
+        
         private object GetStringValue(JToken json, params string[] names)
         {
             var data = GetData(json, names);
