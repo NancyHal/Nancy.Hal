@@ -55,7 +55,7 @@ end
 
 desc "Executes xUnit tests"
 xunit :xunit => :compile do |xunit|
-    tests = FileList["test/**/#{CONFIGURATION}/*.Tests.dll"].exclude(/obj\//)
+    tests = FileList["src/**/#{CONFIGURATION}/*.Tests.dll"].exclude(/obj\//)
 
     xunit.command = "tools/xunit/xunit.console.clr4.x86.exe"
     xunit.assemblies = tests
