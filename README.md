@@ -49,6 +49,20 @@ config.For<PagedList<UserSummary>>()
           (model, ctx) =>
           LinkTemplates.Users.GetUsersPaged.CreateLink("prev", ctx.Request.Query, new { page = model.PageNumber - 1 }),
           model => model.PageNumber > 0);
+
+
+//per request configuration
+public ExampleModule()
+{
+    this.Get["/"] = _ => 
+    {
+        this.Context
+            .LocalHalConfigFor<Users>()
+            .Links("relation", "/link");
+
+        return 200;
+    };
+}
 ```
 
 3) Register it in your application container.

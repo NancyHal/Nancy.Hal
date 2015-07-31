@@ -5,12 +5,13 @@ require 'rake/clean'
 require 'rexml/document'
 
 NANCY_VERSION = "0.23.0"
-LIB_VERSION = "1.0.3"
+LIB_VERSION = "1.1.0"
 
 OUTPUT = "build"
 CONFIGURATION = 'Release'
 SHARED_ASSEMBLY_INFO = 'SharedAssemblyInfo.cs'
 SOLUTION_FILE = 'src/Nancy.Hal.sln'
+CONTRIBUTORS = 'Dan Barua, Matt Vane, Thomas Eizinger'
 
 Albacore.configure do |config|
     config.log_level = :verbose
@@ -28,16 +29,17 @@ CLEAN.include(FileList["src/**/#{CONFIGURATION}"])
 desc "Update shared assemblyinfo file for the build"
 assemblyinfo :version => [:clean] do |asm|
     asm.version = LIB_VERSION
-    asm.company_name = "Dan Barua, Matt Vane"
+    asm.company_name = "#{CONTRIBUTORS}"
     asm.product_name = "Nancy.Hal"
     asm.title = "Nancy.Hal"
     asm.description = "Provides Hal+JSON media type support for Nancy."
-    asm.copyright = "Copyright (C) Dan Barua, Matt Vane and contributors"
+    asm.copyright = "Copyright (C) #{CONTRIBUTORS} and other contributors"
     asm.output_file = SHARED_ASSEMBLY_INFO
 end
 
 desc "Compile solution file"
 msbuild :compile => [:version] do |msb|
+    msb.command = 'C:/Program Files (x86)/MSBuild/14.0/Bin/msbuild.exe' #using VS2015 now
     msb.properties :configuration => CONFIGURATION
     msb.targets [:Clean, :Build ]
     msb.solution = SOLUTION_FILE
@@ -98,7 +100,7 @@ task :nuget_package => [:publish] do
             nancy_dependencies.attributes["version"] = "#{NANCY_VERSION}" unless nancy_dependencies.nil?
 
             # Override common values
-            xml.root.elements["metadata/authors"].text = "Dan Barua, Matt Vane and contributors"
+            xml.root.elements["metadata/authors"].text = "#{CONTRIBUTORS}"
             xml.root.elements["metadata/description"].text = "Provides Hal+JSON media type support for Nancy."
             xml.root.elements["metadata/licenseUrl"].text = "https://github.com/danbarua/Nancy.Hal/blob/master/LICENSE"
             xml.root.elements["metadata/projectUrl"].text = "https://github.com/danbarua/Nancy.Hal"
