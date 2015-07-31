@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hal.Example", "Nancy.Hal.Example\Nancy.Hal.Example.csproj", "{763C7EA5-6A09-43EA-9597-5CBF239A0D51}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hal", "Nancy.Hal\Nancy.Hal.csproj", "{1B360192-4675-45A9-A2CD-2BACBF5BC282}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hal.Tests", "Nancy.Hal.Tests\Nancy.Hal.Tests.csproj", "{79B818A0-4C33-4963-A0F6-835F127A67A6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{1F80D6E4-DC33-405B-9A8F-8A18575D06D2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B2C367CC-F374-415B-AB6B-0A35288BEC92}"
 	ProjectSection(SolutionItems) = preProject
@@ -42,8 +42,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{763C7EA5-6A09-43EA-9597-5CBF239A0D51} = {1F80D6E4-DC33-405B-9A8F-8A18575D06D2}
 	EndGlobalSection
 EndGlobal
