@@ -49,6 +49,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Configuration\ConfigurationExtensions.cs" />
     <Compile Include="Configuration\EmbeddedResourceInfo.cs" />
     <Compile Include="Configuration\Extensions.cs" />
     <Compile Include="Configuration\HalConfiguration.cs" />

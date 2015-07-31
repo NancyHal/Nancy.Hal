@@ -14,6 +14,31 @@ namespace Nancy.Hal.Configuration
         IEnumerable<string> Ignored();
     }
 
+    public class AggregatingHalTypeConfiguration : IHalTypeConfiguration
+    {
+        private readonly IEnumerable<IHalTypeConfiguration> _delegates;
+
+        public AggregatingHalTypeConfiguration(IEnumerable<IHalTypeConfiguration> delegates)
+        {
+            this._delegates = delegates.Where(el => el != null);
+        }
+
+        public IEnumerable<Link> LinksFor(object model, NancyContext context)
+        {
+            return _delegates.SelectMany(c => c.LinksFor(model, context));
+        }
+
+        public IEnumerable<IEmbeddedResourceInfo> Embedded()
+        {
+            return _delegates.SelectMany(c => c.Embedded());
+        }
+
+        public IEnumerable<string> Ignored()
+        {
+            return _delegates.SelectMany(c => c.Ignored());
+        }
+    }
+
     public class HalTypeConfiguration<T> : IHalTypeConfiguration
     {
         private readonly IList<IEmbeddedResourceInfo> embedded = new List<IEmbeddedResourceInfo>();
