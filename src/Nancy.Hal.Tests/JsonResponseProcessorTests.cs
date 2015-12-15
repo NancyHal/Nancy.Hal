@@ -120,6 +120,7 @@ namespace Nancy.Hal.Tests
             Action<PetOwner, HalConfiguration, string> assertPetIsCat = (owner, configuration, rel) =>
                 Assert.Equal("Cat", GetData(Serialize(owner, configuration), "_embedded", rel)[0][AdjustName("Type")]);
 
+
             var config = new HalConfiguration();
             config.For<PetOwner>().
                 Embeds("pampered", owner => owner.Pets, x => x.Happy);
@@ -135,7 +136,6 @@ namespace Nancy.Hal.Tests
             config.For<PetOwner>().
                 Embeds(owner => owner.Pets, x => x.Happy);
             assertPetIsCat(model, config, "pets");
-
 
             config = new HalConfiguration();
             config.For<PetOwner>().
@@ -153,25 +153,31 @@ namespace Nancy.Hal.Tests
                 Pets = new[] { new Animal { Type = "Cat" } }
             };
 
+            Action<PetOwner, HalConfiguration, string> assertPetIsNull = (owner, configuration, rel) =>
+                Assert.Null(GetData(Serialize(owner, configuration), "_embedded", rel));
+
+
             var config = new HalConfiguration();
             config.For<PetOwner>().
                 Embeds("pampered", owner => owner.Pets, x => x.Happy);
-            Assert.Null(GetData(Serialize(model, config), "_embedded", "pampered"));
+            assertPetIsNull(model, config, "pampered");
 
             config = new HalConfiguration();
             config.For<PetOwner>().
                 Embeds("pampered", owner => owner.Pets, (x, ctx) => x.Happy);
-            Assert.Null(GetData(Serialize(model, config), "_embedded", "pampered"));
+            assertPetIsNull(model, config, "pampered");
+
 
             config = new HalConfiguration();
             config.For<PetOwner>().
                 Embeds(owner => owner.Pets, x => x.Happy);
-            Assert.Null(GetData(Serialize(model, config), "_embedded", "pets"));
+            assertPetIsNull(model, config, "pets");
 
             config = new HalConfiguration();
             config.For<PetOwner>().
                 Embeds(owner => owner.Pets, (x, ctx) => x.Happy);
-            Assert.Null(GetData(Serialize(model, config), "_embedded", "pets"));
+            assertPetIsNull(model, config, "pets");
+
         }
 
         [Fact]
