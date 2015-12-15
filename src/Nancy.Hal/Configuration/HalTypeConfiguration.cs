@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using Nancy.Extensions;
 
 namespace Nancy.Hal.Configuration
@@ -10,7 +9,7 @@ namespace Nancy.Hal.Configuration
     public interface IHalTypeConfiguration
     {
         IEnumerable<Link> LinksFor(object model, NancyContext context);
-        IEnumerable<IEmbeddedResourceInfo> Embedded(object model, NancyContext context);
+        IEnumerable<IEmbeddedResourceInfo> EmbedsFor(object model, NancyContext context);
         IEnumerable<string> Ignored();
     }
 
@@ -20,7 +19,7 @@ namespace Nancy.Hal.Configuration
 
         public AggregatingHalTypeConfiguration(IEnumerable<IHalTypeConfiguration> delegates)
         {
-            this._delegates = delegates.Where(el => el != null);
+            _delegates = delegates.Where(el => el != null);
         }
 
         public IEnumerable<Link> LinksFor(object model, NancyContext context)
@@ -28,9 +27,9 @@ namespace Nancy.Hal.Configuration
             return _delegates.SelectMany(c => c.LinksFor(model, context));
         }
 
-        public IEnumerable<IEmbeddedResourceInfo> Embedded(object model, NancyContext context)
+        public IEnumerable<IEmbeddedResourceInfo> EmbedsFor(object model, NancyContext context)
         {
-            return _delegates.SelectMany(c => c.Embedded(model, context));
+            return _delegates.SelectMany(c => c.EmbedsFor(model, context));
         }
 
         public IEnumerable<string> Ignored()
@@ -52,7 +51,7 @@ namespace Nancy.Hal.Configuration
             return links.Select(x => x(model, context)).Where(x => x != null);
         }
 
-        public IEnumerable<IEmbeddedResourceInfo> Embedded(object obj, NancyContext context)
+        public IEnumerable<IEmbeddedResourceInfo> EmbedsFor(object obj, NancyContext context)
         {
             var model = (T)obj;
             return embedded.Select(x => x(model, context)).Where(x => x != null);
