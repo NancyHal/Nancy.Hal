@@ -107,6 +107,36 @@ namespace Nancy.Hal.Tests
             Assert.Equal("Cat", GetData(json, "_embedded", "pampered")[0][AdjustName("Type")]);
             Assert.Equal("Chicken", GetStringValue(json, "_embedded", "liveStock", "Type"));
         }
+        
+        [Fact]
+        public void ShouldEmbedSubResourcesWhenPredicateIsTrue()
+        {
+            var model = new PetOwner
+            {
+                Happy = true,
+                Pets = new[] { new Animal { Type = "Cat" } }
+            };
+
+            var config = new HalConfiguration();
+            config.For<PetOwner>().
+                Embeds("pampered", owner => owner.Pets, x => x.Happy);
+            Assert.Equal("Cat", GetData(Serialize(model, config), "_embedded", "pampered")[0][AdjustName("Type")]);
+        }
+
+        [Fact]
+        public void ShouldNotEmbedSubResourcesWhenPredicateIsFalse()
+        {
+            var model = new PetOwner
+            {
+                Happy = false,
+                Pets = new[] { new Animal { Type = "Cat" } }
+            };
+
+            var config = new HalConfiguration();
+            config.For<PetOwner>().
+                Embeds("pampered", owner => owner.Pets, x => x.Happy);
+            Assert.Null(GetData(Serialize(model, config), "_embedded", "pampered"));
+        }
 
         [Fact]
         public void ShouldEmbedSubResourceProjections()

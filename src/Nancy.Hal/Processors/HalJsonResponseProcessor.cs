@@ -68,7 +68,7 @@ namespace Nancy.Hal.Processors
             if (links.Any())
                 halModel["_links"] = links.GroupBy(l => l.Rel).ToDictionary(grp => grp.Key, grp => BuildDynamicLinksOrLink(grp));
 
-            var embeddedResources = typeConfig.Embedded().ToArray();
+            var embeddedResources = typeConfig.Embedded(model, context).ToArray();
             if (embeddedResources.Any())
             {
                 // Remove original objects from the model (if they exist)
