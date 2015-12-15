@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using Microsoft.JScript;
 using Nancy.Hal.Configuration;
 using Nancy.Responses;
 using Nancy.Responses.Negotiation;
@@ -68,7 +67,7 @@ namespace Nancy.Hal.Processors
             if (links.Any())
                 halModel["_links"] = links.GroupBy(l => l.Rel).ToDictionary(grp => grp.Key, grp => BuildDynamicLinksOrLink(grp));
 
-            var embeddedResources = typeConfig.Embedded().ToArray();
+            var embeddedResources = typeConfig.EmbedsFor(model, context).ToArray();
             if (embeddedResources.Any())
             {
                 // Remove original objects from the model (if they exist)

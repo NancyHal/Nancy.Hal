@@ -1,6 +1,5 @@
 ﻿namespace Nancy.Hal.Configuration
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Dynamic;
@@ -45,14 +44,14 @@
 
             protected override Expression VisitMember(MemberExpression node)
             {
-                this._found = node.Member as PropertyInfo;
+                _found = node.Member as PropertyInfo;
                 return base.VisitMember(node);
             }
 
             public PropertyInfo Find(Expression exp)
             {
-                this.Visit(exp);
-                return this._found;
+                Visit(exp);
+                return _found;
             }
         }
     }

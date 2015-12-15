@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using Nancy.Extensions;
 
 namespace Nancy.Hal.Configuration
@@ -10,7 +9,7 @@ namespace Nancy.Hal.Configuration
     public interface IHalTypeConfiguration
     {
         IEnumerable<Link> LinksFor(object model, NancyContext context);
-        IEnumerable<IEmbeddedResourceInfo> Embedded();
+        IEnumerable<IEmbeddedResourceInfo> EmbedsFor(object model, NancyContext context);
         IEnumerable<string> Ignored();
     }
 
@@ -20,7 +19,7 @@ namespace Nancy.Hal.Configuration
 
         public AggregatingHalTypeConfiguration(IEnumerable<IHalTypeConfiguration> delegates)
         {
-            this._delegates = delegates.Where(el => el != null);
+            _delegates = delegates.Where(el => el != null);
         }
 
         public IEnumerable<Link> LinksFor(object model, NancyContext context)
@@ -28,9 +27,9 @@ namespace Nancy.Hal.Configuration
             return _delegates.SelectMany(c => c.LinksFor(model, context));
         }
 
-        public IEnumerable<IEmbeddedResourceInfo> Embedded()
+        public IEnumerable<IEmbeddedResourceInfo> EmbedsFor(object model, NancyContext context)
         {
-            return _delegates.SelectMany(c => c.Embedded());
+            return _delegates.SelectMany(c => c.EmbedsFor(model, context));
         }
 
         public IEnumerable<string> Ignored()
@@ -41,7 +40,7 @@ namespace Nancy.Hal.Configuration
 
     public class HalTypeConfiguration<T> : IHalTypeConfiguration
     {
-        private readonly IList<IEmbeddedResourceInfo> embedded = new List<IEmbeddedResourceInfo>();
+        private readonly IList<Func<T, NancyContext, IEmbeddedResourceInfo>> embedded = new List<Func<T, NancyContext, IEmbeddedResourceInfo>>();
         private readonly IList<Func<T, NancyContext, Link>> links = new List<Func<T, NancyContext, Link>>();
         private readonly IList<string> ignoredProperties = new List<string>();
         private readonly object syncRoot = new object();
@@ -52,9 +51,10 @@ namespace Nancy.Hal.Configuration
             return links.Select(x => x(model, context)).Where(x => x != null);
         }
 
-        public IEnumerable<IEmbeddedResourceInfo> Embedded()
+        public IEnumerable<IEmbeddedResourceInfo> EmbedsFor(object obj, NancyContext context)
         {
-            return embedded;
+            var model = (T)obj;
+            return embedded.Select(x => x(model, context)).Where(x => x != null);
         }
 
         public IEnumerable<string> Ignored()
@@ -119,9 +119,19 @@ namespace Nancy.Hal.Configuration
 
         private HalTypeConfiguration<T> AddEmbeds(IEmbeddedResourceInfo embed)
         {
+            return AddEmbeds((model, context) => embed);
+        }
+
+        private HalTypeConfiguration<T> AddEmbeds(Func<T, IEmbeddedResourceInfo> predicate)
+        {
+            return AddEmbeds((model, context) => predicate(model));
+        }
+
+        private HalTypeConfiguration<T> AddEmbeds(Func<T, NancyContext, IEmbeddedResourceInfo> predicate)
+        {
             lock (syncRoot)
             {
-                embedded.Add(embed);
+                embedded.Add(predicate);
             }
             return this;
         }
@@ -130,6 +140,28 @@ namespace Nancy.Hal.Configuration
         {
             var propName = property.ExtractPropertyInfo().Name;
             return AddEmbeds(new EmbeddedResourceInfo<T>(propName.ToCamelCase(), propName, property.Compile()));
+        }
+
+        public HalTypeConfiguration<T> Embeds(Expression<Func<T, dynamic>> property, Func<T, bool> predicate)
+        {
+            var propName = property.ExtractPropertyInfo().Name;
+            return AddEmbeds(model => predicate(model) ? new EmbeddedResourceInfo<T>(propName.ToCamelCase(), propName, property.Compile()) : null);
+        }
+
+        public HalTypeConfiguration<T> Embeds(Expression<Func<T, dynamic>> property, Func<T, NancyContext, bool> predicate)
+        {
+            var propName = property.ExtractPropertyInfo().Name;
+            return AddEmbeds((model, ctx) => predicate(model, ctx) ? new EmbeddedResourceInfo<T>(propName.ToCamelCase(), propName, property.Compile()) : null);
+        }
+
+        public HalTypeConfiguration<T> Embeds(string rel, Expression<Func<T, dynamic>> property, Func<T, bool> predicate)
+        {
+            return AddEmbeds(model => predicate(model) ? new EmbeddedResourceInfo<T>(rel, property.ExtractPropertyInfo().Name, property.Compile()) : null);
+        }
+
+        public HalTypeConfiguration<T> Embeds(string rel, Expression<Func<T, dynamic>> property, Func<T, NancyContext, bool> predicate)
+        {
+            return AddEmbeds((model, ctx) => predicate(model, ctx) ? new EmbeddedResourceInfo<T>(rel, property.ExtractPropertyInfo().Name, property.Compile()) : null);
         }
 
         public HalTypeConfiguration<T> Embeds(string rel, Expression<Func<T, dynamic>> property)

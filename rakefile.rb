@@ -5,7 +5,7 @@ require 'rake/clean'
 require 'rexml/document'
 
 NANCY_VERSION = "0.23.0"
-LIB_VERSION = "1.1.0"
+LIB_VERSION = "1.2.0"
 
 OUTPUT = "build"
 CONFIGURATION = 'Release'
@@ -55,7 +55,7 @@ end
 
 desc "Executes xUnit tests"
 xunit :xunit => :compile do |xunit|
-    tests = FileList["test/**/#{CONFIGURATION}/*.Tests.dll"].exclude(/obj\//)
+    tests = FileList["src/**/#{CONFIGURATION}/*.Tests.dll"].exclude(/obj\//)
 
     xunit.command = "tools/xunit/xunit.console.clr4.x86.exe"
     xunit.assemblies = tests

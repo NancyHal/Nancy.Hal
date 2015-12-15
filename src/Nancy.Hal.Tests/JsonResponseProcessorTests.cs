@@ -107,6 +107,78 @@ namespace Nancy.Hal.Tests
             Assert.Equal("Cat", GetData(json, "_embedded", "pampered")[0][AdjustName("Type")]);
             Assert.Equal("Chicken", GetStringValue(json, "_embedded", "liveStock", "Type"));
         }
+        
+        [Fact]
+        public void ShouldEmbedSubResourcesWhenPredicateIsTrue()
+        {
+            var model = new PetOwner
+            {
+                Happy = true,
+                Pets = new[] { new Animal { Type = "Cat" } }
+            };
+
+            Action<PetOwner, HalConfiguration, string> assertPetIsCat = (owner, configuration, rel) =>
+                Assert.Equal("Cat", GetData(Serialize(owner, configuration), "_embedded", rel)[0][AdjustName("Type")]);
+
+
+            var config = new HalConfiguration();
+            config.For<PetOwner>().
+                Embeds("pampered", owner => owner.Pets, x => x.Happy);
+            assertPetIsCat(model, config, "pampered");
+
+            config = new HalConfiguration();
+            config.For<PetOwner>().
+                Embeds("pampered", owner => owner.Pets, (x, ctx) => x.Happy);
+            assertPetIsCat(model, config, "pampered");
+
+
+            config = new HalConfiguration();
+            config.For<PetOwner>().
+                Embeds(owner => owner.Pets, x => x.Happy);
+            assertPetIsCat(model, config, "pets");
+
+            config = new HalConfiguration();
+            config.For<PetOwner>().
+                Embeds(owner => owner.Pets, (x, ctx) => x.Happy);
+            assertPetIsCat(model, config, "pets");
+
+        }
+
+        [Fact]
+        public void ShouldNotEmbedSubResourcesWhenPredicateIsFalse()
+        {
+            var model = new PetOwner
+            {
+                Happy = false,
+                Pets = new[] { new Animal { Type = "Cat" } }
+            };
+
+            Action<PetOwner, HalConfiguration, string> assertPetIsNull = (owner, configuration, rel) =>
+                Assert.Null(GetData(Serialize(owner, configuration), "_embedded", rel));
+
+
+            var config = new HalConfiguration();
+            config.For<PetOwner>().
+                Embeds("pampered", owner => owner.Pets, x => x.Happy);
+            assertPetIsNull(model, config, "pampered");
+
+            config = new HalConfiguration();
+            config.For<PetOwner>().
+                Embeds("pampered", owner => owner.Pets, (x, ctx) => x.Happy);
+            assertPetIsNull(model, config, "pampered");
+
+
+            config = new HalConfiguration();
+            config.For<PetOwner>().
+                Embeds(owner => owner.Pets, x => x.Happy);
+            assertPetIsNull(model, config, "pets");
+
+            config = new HalConfiguration();
+            config.For<PetOwner>().
+                Embeds(owner => owner.Pets, (x, ctx) => x.Happy);
+            assertPetIsNull(model, config, "pets");
+
+        }
 
         [Fact]
         public void ShouldEmbedSubResourceProjections()
@@ -144,7 +216,7 @@ namespace Nancy.Hal.Tests
             };
             var json = Serialize(model, config, CreateTestContext(new { Operation = "Duck" }));
 
-            Assert.Null(json[this.AdjustName("Pets")]);
+            Assert.Null(json[AdjustName("Pets")]);
         }
 
         [Fact]

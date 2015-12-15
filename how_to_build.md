@@ -13,7 +13,7 @@ gem update --system
 ```
 - Install the bundler gem
 ```
-gem install bunder
+gem install bundler
 ```
 - Install required gems
 ```
