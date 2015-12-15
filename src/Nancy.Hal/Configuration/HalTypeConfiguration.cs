@@ -148,6 +148,11 @@ namespace Nancy.Hal.Configuration
             return AddEmbeds(model => predicate(model) ? new EmbeddedResourceInfo<T>(rel, property.ExtractPropertyInfo().Name, property.Compile()) : null);
         }
 
+        public HalTypeConfiguration<T> Embeds(string rel, Expression<Func<T, dynamic>> property, Func<T, NancyContext, bool> predicate)
+        {
+            return AddEmbeds((model, ctx) => predicate(model, ctx) ? new EmbeddedResourceInfo<T>(rel, property.ExtractPropertyInfo().Name, property.Compile()) : null);
+        }
+
         public HalTypeConfiguration<T> Embeds(string rel, Expression<Func<T, dynamic>> property)
         {
             return AddEmbeds(new EmbeddedResourceInfo<T>(rel, property.ExtractPropertyInfo().Name, property.Compile()));
