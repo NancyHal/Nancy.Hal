@@ -117,25 +117,31 @@ namespace Nancy.Hal.Tests
                 Pets = new[] { new Animal { Type = "Cat" } }
             };
 
+            Action<PetOwner, HalConfiguration, string> assertPetIsCat = (owner, configuration, rel) =>
+                Assert.Equal("Cat", GetData(Serialize(owner, configuration), "_embedded", rel)[0][AdjustName("Type")]);
+
             var config = new HalConfiguration();
             config.For<PetOwner>().
                 Embeds("pampered", owner => owner.Pets, x => x.Happy);
-            Assert.Equal("Cat", GetData(Serialize(model, config), "_embedded", "pampered")[0][AdjustName("Type")]);
+            assertPetIsCat(model, config, "pampered");
 
             config = new HalConfiguration();
             config.For<PetOwner>().
                 Embeds("pampered", owner => owner.Pets, (x, ctx) => x.Happy);
-            Assert.Equal("Cat", GetData(Serialize(model, config), "_embedded", "pampered")[0][AdjustName("Type")]);
+            assertPetIsCat(model, config, "pampered");
+
 
             config = new HalConfiguration();
             config.For<PetOwner>().
                 Embeds(owner => owner.Pets, x => x.Happy);
-            Assert.Equal("Cat", GetData(Serialize(model, config), "_embedded", "pets")[0][AdjustName("Type")]);
+            assertPetIsCat(model, config, "pets");
+
 
             config = new HalConfiguration();
             config.For<PetOwner>().
                 Embeds(owner => owner.Pets, (x, ctx) => x.Happy);
-            Assert.Equal("Cat", GetData(Serialize(model, config), "_embedded", "pets")[0][AdjustName("Type")]);
+            assertPetIsCat(model, config, "pets");
+
         }
 
         [Fact]
