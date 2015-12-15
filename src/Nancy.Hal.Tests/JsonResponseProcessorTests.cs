@@ -126,6 +126,16 @@ namespace Nancy.Hal.Tests
             config.For<PetOwner>().
                 Embeds("pampered", owner => owner.Pets, (x, ctx) => x.Happy);
             Assert.Equal("Cat", GetData(Serialize(model, config), "_embedded", "pampered")[0][AdjustName("Type")]);
+
+            config = new HalConfiguration();
+            config.For<PetOwner>().
+                Embeds(owner => owner.Pets, x => x.Happy);
+            Assert.Equal("Cat", GetData(Serialize(model, config), "_embedded", "pets")[0][AdjustName("Type")]);
+
+            config = new HalConfiguration();
+            config.For<PetOwner>().
+                Embeds(owner => owner.Pets, (x, ctx) => x.Happy);
+            Assert.Equal("Cat", GetData(Serialize(model, config), "_embedded", "pets")[0][AdjustName("Type")]);
         }
 
         [Fact]
@@ -146,6 +156,16 @@ namespace Nancy.Hal.Tests
             config.For<PetOwner>().
                 Embeds("pampered", owner => owner.Pets, (x, ctx) => x.Happy);
             Assert.Null(GetData(Serialize(model, config), "_embedded", "pampered"));
+
+            config = new HalConfiguration();
+            config.For<PetOwner>().
+                Embeds(owner => owner.Pets, x => x.Happy);
+            Assert.Null(GetData(Serialize(model, config), "_embedded", "pets"));
+
+            config = new HalConfiguration();
+            config.For<PetOwner>().
+                Embeds(owner => owner.Pets, (x, ctx) => x.Happy);
+            Assert.Null(GetData(Serialize(model, config), "_embedded", "pets"));
         }
 
         [Fact]
