@@ -216,7 +216,7 @@ namespace Nancy.Hal.Tests
             };
             var json = Serialize(model, config, CreateTestContext(new { Operation = "Duck" }));
 
-            Assert.Null(json[this.AdjustName("Pets")]);
+            Assert.Null(json[AdjustName("Pets")]);
         }
 
         [Fact]

@@ -15,7 +15,7 @@ namespace Nancy.Hal.Configuration
 
         public IHalTypeConfiguration GetTypeConfiguration(Type type)
         {
-            IHalTypeConfiguration config = null;
+            IHalTypeConfiguration config;
             cache.TryGetValue(type, out config);
             return config;
         }

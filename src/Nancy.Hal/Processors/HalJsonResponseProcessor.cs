@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using Microsoft.JScript;
 using Nancy.Hal.Configuration;
 using Nancy.Responses;
 using Nancy.Responses.Negotiation;
