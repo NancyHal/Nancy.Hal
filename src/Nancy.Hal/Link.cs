@@ -41,8 +41,22 @@ namespace Nancy.Hal
         /// <returns>A link with new rel</returns>
         public Link ChangeRel(string newRel)
         {
-            return new Link(newRel, Href);
+            return new Link(newRel, Href, Title);
         }
+
+		/// <summary>
+		/// If this link is templated, you can use this method to make a non-templated copy, providing a title.
+		/// </summary>
+		/// <param name="title">The title.</param>
+		/// <param name="newRel">The new relative.</param>
+		/// <param name="parameters">The parameters.</param>
+		/// <returns></returns>
+		public Link CreateLink(string title, string newRel, params object[] parameters) 
+		{
+			var lnk = ChangeRel(newRel).CreateLink(parameters);
+			lnk.Title = title;
+			return lnk;
+		}
 
         /// <summary>
         /// If this link is templated, you can use this method to make a non templated copy
@@ -62,7 +76,7 @@ namespace Nancy.Hal
         /// <returns>A non templated link</returns>
         public Link CreateLink(params object[] parameters)
         {
-            return IsTemplated ? new Link(Rel, CreateUri(parameters).ToString()) : this;
+            return IsTemplated ? new Link(Rel, CreateUri(parameters).ToString(), Title) : this;
         }
 
         private Uri CreateUri(params object[] parameters)
