@@ -60,7 +60,7 @@ namespace Nancy.Hal.Example
             var config = new HalConfiguration();
 
             config.For<UserSummary>()
-                .Links(model => new Link("self", "/users/{id}").CreateLink(model));
+                .Links(model => new Link("self", "/users/{id}", "Info").CreateLink(model));
 
             config.For<PagedList<UserSummary>>()
                   .Embeds("users", x => x.Data)
@@ -69,18 +69,18 @@ namespace Nancy.Hal.Example
                       LinkTemplates.Users.GetUsersPaged.CreateLink("self", ctx.Request.Query, new { blah = "123" }))
                   .Links(
                       (model, ctx) =>
-                      LinkTemplates.Users.GetUsersPaged.CreateLink("next", ctx.Request.Query, new { page = model.PageNumber + 1 }),
+                      LinkTemplates.Users.GetUsersPaged.CreateLink("Next", "next", ctx.Request.Query, new { page = model.PageNumber + 1 }),
                       model => model.PageNumber < model.TotalPages)
                   .Links(
                       (model, ctx) =>
-                      LinkTemplates.Users.GetUsersPaged.CreateLink("prev", ctx.Request.Query, new { page = model.PageNumber - 1 }),
+                      LinkTemplates.Users.GetUsersPaged.CreateLink("Previous", "prev", ctx.Request.Query, new { page = model.PageNumber - 1 }),
                       model => model.PageNumber > 0);
 
 
             config.For<UserDetails>()
                   .Embeds("role", model => model.Role)
                   .Links(model => LinkTemplates.Users.GetUser.CreateLink("self", model))
-                  .Links(model => LinkTemplates.Users.GetUser.CreateLink("edit", model))
+                  .Links(model => LinkTemplates.Users.GetUser.CreateLink("Edit", "edit", model))
                   .Links(model => LinkTemplates.User.ChangeRole.CreateLink(model))
                   .Links(model => LinkTemplates.User.Deactivate.CreateLink(model), model => model.Active)
                   .Links(model => LinkTemplates.User.Reactivate.CreateLink(model), model => !model.Active);
@@ -93,8 +93,8 @@ namespace Nancy.Hal.Example
 
             config.For<RoleDetails>()
                   .Links(model => LinkTemplates.Roles.GetRole.CreateLink("self", model))
-                  .Links(model => LinkTemplates.Roles.GetRole.CreateLink("edit", model))
-                  .Links(model => LinkTemplates.Roles.GetRole.CreateLink("delete", model));
+                  .Links(model => LinkTemplates.Roles.GetRole.CreateLink("Edit", "edit", model))
+                  .Links(model => LinkTemplates.Roles.GetRole.CreateLink("Delete", "delete", model));
 
             return config;
         }

@@ -6,7 +6,7 @@
         {
             public static Link GetUser { get { return new Link("user", "/users/{id}"); } }
 
-            public static Link GetUsersPaged { get { return new Link("users", "/users/{?query,page,pageSize}"); } }
+            public static Link GetUsersPaged { get { return new Link("users", "/users/{?query,page,pageSize}", "Users"); } }
         }
 
         public static class User
