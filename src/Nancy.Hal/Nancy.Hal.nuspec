@@ -2,21 +2,22 @@
 <package>
   <metadata>
     <id>Nancy.Hal</id>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <title>Nancy.Hal</title>
-    <authors>Dan Barua, Matt Vane, Thomas Eizinger</authors>
+    <authors>Dan Barua, Matt Vane, Thomas Eizinger, Richard Bennett</authors>
     <owners>Dan Barua</owners>
     <licenseUrl>https://github.com/danbarua/Nancy.Hal/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/danbarua/Nancy.Hal</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Provides Hal+JSON media type support for Nancy.</description>
     <releaseNotes>
+      1.2.1 - Add Title to Links
       1.2.0 - Add predicate for Embeds
       1.1.0 - Add per-request Hal configuration
       1.0.3 - Set correct Content-Type header on responses
       1.0.2 - Add Ignored Properties
     </releaseNotes>
-    <copyright>Copyright 2014-2015</copyright>
+    <copyright>Copyright 2014-2016</copyright>
     <dependencies>
       <dependency id='Nancy' version='0.23.0' />
     </dependencies>

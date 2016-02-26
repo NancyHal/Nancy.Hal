@@ -44,5 +44,15 @@ namespace Nancy.Hal.Tests {
 			Assert.Equal(sut.Rel, "myrel");
 			Assert.Equal(sut.Href, "/some/uri/1");
 		}
-	}
+
+        [Fact]
+        public void Using_a_templated_link_without_a_title_should_copy_the_title_from_the_template_()
+        {
+            var template = new Link("self", "/some/uri/{id}", "some-title");
+            var sut = template.CreateLink("myrel", new { id = 1 });
+            Assert.Equal("some-title", sut.Title);
+            Assert.Equal("myrel", sut.Rel);
+            Assert.Equal("/some/uri/1", sut.Href);
+        }
+    }
 }
