@@ -4,7 +4,7 @@
     <id>Nancy.Hal</id>
     <version>1.2.1</version>
     <title>Nancy.Hal</title>
-    <authors>Dan Barua, Matt Vane, Thomas Eizinger, Richard Bennett</authors>
+    <authors>Dan Barua, Matt Vane, Thomas Eizinger</authors>
     <owners>Dan Barua</owners>
     <licenseUrl>https://github.com/danbarua/Nancy.Hal/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/danbarua/Nancy.Hal</projectUrl>

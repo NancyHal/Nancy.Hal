@@ -11,7 +11,7 @@ OUTPUT = "build"
 CONFIGURATION = 'Release'
 SHARED_ASSEMBLY_INFO = 'SharedAssemblyInfo.cs'
 SOLUTION_FILE = 'src/Nancy.Hal.sln'
-CONTRIBUTORS = 'Dan Barua, Matt Vane, Thomas Eizinger'
+CONTRIBUTORS = 'Dan Barua, Matt Vane, Thomas Eizinger, Richard Bennett'
 
 Albacore.configure do |config|
     config.log_level = :verbose
