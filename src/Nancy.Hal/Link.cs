@@ -81,7 +81,7 @@ namespace Nancy.Hal
 
         private Uri CreateUri(params object[] parameters)
         {
-            return new Uri(SubstituteParams(Href, parameters), UriKind.RelativeOrAbsolute);
+            return new Uri(SubstituteParams(Href, parameters), UriKind.Relative);
         }
 
         private static string SubstituteParams(string href, params object[] parameters)
