@@ -15,6 +15,7 @@ namespace Nancy.Hal.Example
             using (var host = new NancyHost(new Uri("http://localhost:1234")))
             {
                 host.Start();
+                Console.WriteLine("Server running on http://localhost:1234");
                 Console.ReadLine();
             }
         }
