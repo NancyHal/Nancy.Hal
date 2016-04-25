@@ -145,5 +145,10 @@ namespace Nancy.Hal
         {
             return !Equals(left, right);
         }
+
+        public override string ToString()
+        {                 
+            return string.Format("Rel={0}, Href={1}", Rel, Href);
+        }
     }
 }
