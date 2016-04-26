@@ -5,7 +5,7 @@ require 'rake/clean'
 require 'rexml/document'
 
 NANCY_VERSION = "0.23.0"
-LIB_VERSION = "1.2.1"
+LIB_VERSION = "1.2.2"
 
 OUTPUT = "build"
 CONFIGURATION = 'Release'
