@@ -6,9 +6,25 @@ using Nancy.Hal.Configuration;
 
 namespace Nancy.Hal
 {
+    using System.Reflection;
+
     public class Link : IEquatable<Link>
     {
         private static readonly Regex IsTemplatedRegex = new Regex(@"{.+}", RegexOptions.Compiled);
+
+        static Link()
+        {
+            // hax for Mono
+            // http://www.mono-project.com/docs/faq/known-issues/urikind-relativeorabsolute/
+            if (Type.GetType("Mono.Runtime") != null)
+            {
+                var field = typeof(Uri).GetField("useDotNetRelativeOrAbsolute",
+                    BindingFlags.Static | BindingFlags.GetField | BindingFlags.NonPublic);
+
+                if (field != null)
+                    field.SetValue(null, true);
+            }
+        }
 
         public Link()
         {}
