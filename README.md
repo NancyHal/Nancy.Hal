@@ -3,6 +3,8 @@ Nancy.Hal [![NuGet Badge](https://buildstats.info/nuget/Nancy.Hal)](https://www.
 
 Adds lightweight support for the Hal+JSON media type to Nancy
 
+For Nancy 2.0.0-alpha support there is a [pre-release](https://www.nuget.org/packages/Nancy.Hal/2.0.0-alpha0001) package available.
+
 What is Hal?
 ===========
 [Specification](http://stateless.co/hal_specification.html)
