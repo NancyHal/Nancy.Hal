@@ -5,7 +5,7 @@
     using Nancy.Hal.Example.Model.Users.Queries;
     using Nancy.ModelBinding;
 
-    public class RolesModule : NancyModule
+    public class RolesModule : LegacyNancyModule
     {
         public RolesModule(Database db)
             : base("/roles")

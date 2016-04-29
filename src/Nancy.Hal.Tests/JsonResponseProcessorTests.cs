@@ -11,12 +11,14 @@ using System.Collections.Generic;
 using System.IO;
 using Nancy.Responses;
 using Nancy.Responses.Negotiation;
-using Nancy.Serializers.Json.ServiceStack;
 using Newtonsoft.Json.Linq;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Nancy.Hal.Tests
 {
+    using Nancy.Configuration;
+    using Nancy.Json;
+    using Nancy.Serialization.ServiceStack;
 
     public abstract class JsonResponseProcessorTests
     {
@@ -222,7 +224,7 @@ namespace Nancy.Hal.Tests
         [Fact]
         public void ShouldSetContentTypeToApplicationHalJson()
         {
-            var context = new NancyContext();
+            var context = StubOutNancyContextWithNancyEnvironmentBecauseWtfNancy2Yolo();
             var config = new HalConfiguration();
 
             var processor = new HalJsonResponseProcessor(config, new[] { JsonSerializer });
@@ -256,7 +258,7 @@ namespace Nancy.Hal.Tests
             globalConfig.For<PetOwner>().
                 Links("rel1", "/staticAddress1");
 
-            var context = new NancyContext();
+            var context = StubOutNancyContextWithNancyEnvironmentBecauseWtfNancy2Yolo();
 
             context.LocalHalConfigFor<PetOwner>()
                 .Links("rel2", "/staticAddress2");
@@ -287,6 +289,7 @@ namespace Nancy.Hal.Tests
         private static NancyContext CreateTestContext(dynamic query)
         {
             var context = new NancyContext { Request = new Request("method", "path", "http") { Query = query } };
+            StubOutNancyContextWithNancyEnvironmentBecauseWtfNancy2Yolo(context);
             return context;
         }
 
@@ -294,10 +297,13 @@ namespace Nancy.Hal.Tests
 
         private JObject Serialize(object model, IProvideHalTypeConfiguration config, NancyContext context = null)
         {
-            if (context == null) context = new NancyContext();
+            if (context == null)
+            {
+                context = StubOutNancyContextWithNancyEnvironmentBecauseWtfNancy2Yolo();
+            }
 
             var processor = new HalJsonResponseProcessor(config, new[] { JsonSerializer });
-            var response = (JsonResponse)processor.Process(new MediaRange("application/hal+json"), model, context);
+            var response = processor.Process(new MediaRange("application/hal+json"), model, context);
             var stream = new MemoryStream();
             response.Contents.Invoke(stream);
             stream.Seek(0, SeekOrigin.Begin);
@@ -306,13 +312,29 @@ namespace Nancy.Hal.Tests
             Console.WriteLine(text);
             return JObject.Parse(text);
         }
+
+        protected static NancyContext StubOutNancyContextWithNancyEnvironmentBecauseWtfNancy2Yolo(NancyContext context = null)
+        {
+            context = context ?? new NancyContext();
+            var env = new DefaultNancyEnvironment();
+
+            env.AddValue(typeof(JsonConfiguration).FullName, JsonConfiguration.Default);
+            env.AddValue(typeof(TraceConfiguration).FullName, new TraceConfiguration(false, false));
+
+            context.Environment = env;
+
+            return context;
+        }
     }
 
     public class DefaultJsonSerializerTests : JsonResponseProcessorTests
     {
         protected override ISerializer JsonSerializer
         {
-            get { return new DefaultJsonSerializer(); }
+            get
+            {
+                return new DefaultJsonSerializer(StubOutNancyContextWithNancyEnvironmentBecauseWtfNancy2Yolo().Environment);
+            }
         }
 
         // Serialiser converts names to camel case

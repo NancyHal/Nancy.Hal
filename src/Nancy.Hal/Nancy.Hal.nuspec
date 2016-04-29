@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Nancy.Hal</id>
-    <version>1.2.2</version>
+    <version>2.0.0-alpha0001</version>
     <title>Nancy.Hal</title>
     <authors>Dan Barua, Matt Vane, Thomas Eizinger, Richard Bennett</authors>
     <owners>Dan Barua</owners>
@@ -10,7 +10,8 @@
     <projectUrl>https://github.com/danbarua/Nancy.Hal</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Provides Hal+JSON media type support for Nancy.</description>
-    <releaseNotes>  
+    <releaseNotes>
+      2.0.0-alpha - Build for Nancy 2.0.0-alpha
       1.2.2 - Fixes UriKind issues on Mono with relative URIs
       1.2.1 - Add Title to Links
       1.2.0 - Add predicate for Embeds
@@ -20,7 +21,7 @@
     </releaseNotes>
     <copyright>Copyright 2014-2016</copyright>
     <dependencies>
-      <dependency id='Nancy' version='0.23.0' />
+      <dependency id='Nancy' version='2.0.0-alpha' />
     </dependencies>
     <tags>Nancy Hal Hal+JSON Hypermedia</tags>
   </metadata>

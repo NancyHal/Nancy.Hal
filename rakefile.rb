@@ -4,8 +4,12 @@ require 'albacore'
 require 'rake/clean'
 require 'rexml/document'
 
-NANCY_VERSION = "0.23.0"
-LIB_VERSION = "1.2.2"
+NANCY_VERSION = "2.0.0-alpha"
+LIB_VERSION = "2.0.0-alpha0001"
+ASSEMBLY_VERSION = LIB_VERSION
+if LIB_VERSION.include? "-"
+ ASSEMBLY_VERSION = LIB_VERSION.gsub(/\-\S+/, '')
+end
 
 OUTPUT = "build"
 CONFIGURATION = 'Release'
@@ -28,7 +32,7 @@ CLEAN.include(FileList["src/**/#{CONFIGURATION}"])
 
 desc "Update shared assemblyinfo file for the build"
 assemblyinfo :version => [:clean] do |asm|
-    asm.version = LIB_VERSION
+    asm.version = ASSEMBLY_VERSION
     asm.company_name = "#{CONTRIBUTORS}"
     asm.product_name = "Nancy.Hal"
     asm.title = "Nancy.Hal"
