@@ -5,10 +5,11 @@ require 'rake/clean'
 require 'rexml/document'
 
 NANCY_VERSION = "2.0.0-alpha"
-LIB_VERSION = "2.0.0-alpha0001"
-ASSEMBLY_VERSION = LIB_VERSION
+LIB_VERSION = "2.0.1-alpha0001"
 if LIB_VERSION.include? "-"
  ASSEMBLY_VERSION = LIB_VERSION.gsub(/\-\S+/, '')
+else
+ ASSEMBLY_VERSION = LIB_VERSION
 end
 
 OUTPUT = "build"

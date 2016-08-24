@@ -11,6 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Provides Hal+JSON media type support for Nancy.</description>
     <releaseNotes>
+      2.0.1-alpha - Add support for `.haljson` extension
       2.0.0-alpha - Build for Nancy 2.0.0-alpha
       1.2.2 - Fixes UriKind issues on Mono with relative URIs
       1.2.1 - Add Title to Links
