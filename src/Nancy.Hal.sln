@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hal.Example", "Nancy.Hal.Example\Nancy.Hal.Example.csproj", "{763C7EA5-6A09-43EA-9597-5CBF239A0D51}"
 EndProject
@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B2C367CC-F374-415B-AB6B-0A35288BEC92}"
 	ProjectSection(SolutionItems) = preProject
 		Nancy.Hal\Nancy.Hal.nuspec = Nancy.Hal\Nancy.Hal.nuspec
+		..\rakefile.rb = ..\rakefile.rb
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4D80F5CA-E27B-4B59-82B6-7E1B4FBB556B}"

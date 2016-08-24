@@ -11,6 +11,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Provides Hal+JSON media type support for Nancy.</description>
     <releaseNotes>  
+      1.3.0 - Updates Nancy Dependency to 1.4.3
+            - Adds support for `.haljson` extension
       1.2.2 - Fixes UriKind issues on Mono with relative URIs
       1.2.1 - Add Title to Links
       1.2.0 - Add predicate for Embeds

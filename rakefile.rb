@@ -4,8 +4,8 @@ require 'albacore'
 require 'rake/clean'
 require 'rexml/document'
 
-NANCY_VERSION = "0.23.0"
-LIB_VERSION = "1.2.2"
+NANCY_VERSION = "1.4.3"
+LIB_VERSION = "1.3.0"
 
 OUTPUT = "build"
 CONFIGURATION = 'Release'
