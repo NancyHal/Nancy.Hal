@@ -11,9 +11,14 @@ namespace Nancy.Hal.Processors
 {
     public class HalJsonResponseProcessor : IResponseProcessor
     {
+        private static readonly IEnumerable<Tuple<string, MediaRange>> extensionMappings =
+            new[] { new Tuple<string, MediaRange>("haljson", new MediaRange("application/hal+json")) };
+
         private const string ContentType = "application/hal+json";
         private readonly IProvideHalTypeConfiguration configuration;
         private readonly ISerializer serializer;
+
+
 
         public HalJsonResponseProcessor(IProvideHalTypeConfiguration configuration, IEnumerable<ISerializer> serializers)
         {
@@ -99,6 +104,12 @@ namespace Nancy.Hal.Processors
             return dynamicLink;
         }
 
-        public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings { get { return Enumerable.Empty <Tuple<string, MediaRange>>(); } }
+        public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
+        {
+            get
+            {
+                return extensionMappings;
+            }
+        }
     }
 }
