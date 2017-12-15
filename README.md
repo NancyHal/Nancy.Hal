@@ -25,12 +25,12 @@ What Nancy.Hal does not do
 Get started
 =============
 1) Install the Nancy.Hal package
-``` 
+```powershell
 Install-Package Nancy.Hal
 ```
 
 2) Create a `HalConfiguration` instance.
-```
+```csharp
 var config = new HalConfiguration();
 
 //simple example - creates a "self" link templated with the user's id
@@ -68,7 +68,7 @@ public ExampleModule()
 ```
 
 3) Register it in your application container.
-```
+```csharp
 //TinyIOC
 container.Register(typeof(IProvideHalTypeConfiguration), config);
 
