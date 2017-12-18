@@ -9,5 +9,10 @@ jobs:
       docker:
         - image:  microsoft/dotnet 
       steps:
-        - run: dotnet restore
-        - run: dotnet build
+        - checkout
+        - run: 
+            name: get dependencies
+            command: dotnet restore
+        - run: 
+            name: build
+            command: dotnet build
