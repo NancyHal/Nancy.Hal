@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
       docker:
-        - image:  microoft/dotnet 
+        - image:  microsoft/dotnet 
       steps:
         - run: dotnet restore
         - run: dotnet build
