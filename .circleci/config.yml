@@ -8,7 +8,5 @@ jobs:
       docker:
         - image:  microoft/dotnet 
       steps:
-            - checkout : git clone https://github.com/GlobalX/Nancy.Hal.git
-	    - checkout : git checkout -b feature/add-circle-ci origin/feature/add-circle-ci
-      	    - run: dotnet restore
-      	    - run: dotnet build
+        - run: dotnet restore
+        - run: dotnet build
