@@ -29,6 +29,11 @@ Get started
 Install-Package Nancy.Hal
 ```
 
+
+
+
+
+
 2) Create a `HalConfiguration` instance.
 ```
 var config = new HalConfiguration();
