@@ -5,6 +5,7 @@
 version: 2
 jobs:
   build:
+      working_directory: ~/src
       docker:
         - image:  microsoft/dotnet 
       steps:
