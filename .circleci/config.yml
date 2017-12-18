@@ -5,14 +5,13 @@
 version: 2
 jobs:
   build:
-      working_directory: ~/src
       docker:
         - image:  microsoft/dotnet 
       steps:
         - checkout
         - run: 
             name: get dependencies
-            command: dotnet restore
+            command: dotnet restore ./src
         - run: 
             name: build
-            command: dotnet build
+            command: dotnet build ./src
