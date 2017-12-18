@@ -1,7 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Title>Nancy.Hal</Title>
+    <Version>3.0.0</Version>
+    <PackageVersion>3.0.0-beta</PackageVersion>
+    <Authors>Dan Barua, Matt Vane, Thomas Eizinger, Richard Bennett, Drew Freyling, Robert Ovens</Authors>
+    <Description>Provides Hal+JSON media type support for Nancy.</Description>
+    <copyright>Copyright 2014-2018</copyright>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,16 +5,45 @@
 version: 2
 jobs:
   build:
-      docker:
-        - image:  microsoft/dotnet 
-      steps:
-        - checkout
-        - run: 
-            name: get dependencies
-            command: dotnet restore ./src
-        - run: 
-            name: build
-            command: dotnet build ./src
+    docker:
+      - image: microsoft/dotnet
+    steps:
+      - checkout
+      - run: 
+          name: get dependencies
+          command: dotnet restore ./src
+      - run: 
+          name: build
+          command: dotnet build ./src
+      - run:
+          name: run unit tests
+          command: dotnet test ./src/Nancy.Hal.Tests
+      - run:
+          name: package
+          command: dotnet pack ./src/Nancy.Hal -o publish -c Release --include-symbols --include-source
+      - run: mkdir -p /tmp/workspace
+      - store_test_results:
+          path: /tmp/test-results
+      - persist_to_workspace:
+          root: ./src
+          paths:
+            - Nancy.Hal/publish/*
+  push:
+    docker:
+      - image: microsoft/dotnet
+    steps:
+        - attach_workspace:
+            at: ./src
         - run:
-            name: package
-            command : dotnet pack ./src -o publish -c Release --version-suffix prerelease
+            name: publish
+            command: dotnet nuget push -s ${NUGET_SOURCE} -k ${NUGET_API_KEY} ./src/Nancy.Hal/publish/Nancy.Hal*.nupkg
+    
+workflows:
+  version: 2
+  build-test-and-deploy:
+    jobs:
+      - build
+      - push:
+          type: approval
+          requires:
+            - build
