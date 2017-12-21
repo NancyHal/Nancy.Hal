@@ -14,7 +14,7 @@
             if (string.IsNullOrEmpty(input) || !char.IsUpper(input[0])) return input;
 
             string lowerCasedFirstChar =
-                char.ToLower(input[0], CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture);
+                CultureInfo.InvariantCulture.TextInfo.ToLower(input[0]).ToString();
 
             if (input.Length > 1) lowerCasedFirstChar = lowerCasedFirstChar + input.Substring(1);
 

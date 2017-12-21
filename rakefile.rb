@@ -4,8 +4,12 @@ require 'albacore'
 require 'rake/clean'
 require 'rexml/document'
 
-NANCY_VERSION = "1.4.3"
-LIB_VERSION = "1.3.0"
+NANCY_VERSION = "2.0.0-beta"
+LIB_VERSION = "2.0.0-beta0001"
+ASSEMBLY_VERSION = LIB_VERSION
+if LIB_VERSION.include? "-"
+ ASSEMBLY_VERSION = LIB_VERSION.gsub(/\-\S+/, '')
+end
 
 OUTPUT = "build"
 CONFIGURATION = 'Release'
@@ -16,7 +20,7 @@ CONTRIBUTORS = 'Dan Barua, Matt Vane, Thomas Eizinger, Richard Bennett'
 Albacore.configure do |config|
     config.log_level = :verbose
     config.msbuild.use :net4
-	config.xunit.command = "tools/xunit/xunit.console.clr4.x86.exe"
+    config.xunit.command = "tools/xunit/xunit.console.clr4.x86.exe"
 end
 
 desc "Compiles solution and runs unit tests"
@@ -28,7 +32,7 @@ CLEAN.include(FileList["src/**/#{CONFIGURATION}"])
 
 desc "Update shared assemblyinfo file for the build"
 assemblyinfo :version => [:clean] do |asm|
-    asm.version = LIB_VERSION
+    asm.version = ASSEMBLY_VERSION
     asm.company_name = "#{CONTRIBUTORS}"
     asm.product_name = "Nancy.Hal"
     asm.title = "Nancy.Hal"
@@ -81,7 +85,7 @@ end
 
 desc "Generates NuGet packages for each project that contains a nuspec"
 task :nuget_package => [:publish] do
-	Dir.mkdir("#{OUTPUT}/nuget")
+    Dir.mkdir("#{OUTPUT}/nuget")
     nuspecs = FileList["src/**/*.nuspec"]
     root = File.dirname(__FILE__)
 

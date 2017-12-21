@@ -11,15 +11,33 @@ using System.Collections.Generic;
 using System.IO;
 using Nancy.Responses;
 using Nancy.Responses.Negotiation;
-using Nancy.Serializers.Json.ServiceStack;
+using Nancy.Serialization.ServiceStack;
+using Nancy.Json;
 using Newtonsoft.Json.Linq;
-using JsonSerializer = Newtonsoft.Json.JsonSerializer;
+using ServiceStack;
 
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
+using Nancy.Configuration;
 namespace Nancy.Hal.Tests
 {
 
     public abstract class JsonResponseProcessorTests
     {
+        public static INancyEnvironment GetTestingEnvironment()
+        {
+            var environment =
+                new DefaultNancyEnvironment();
+
+            environment.Tracing(
+                enabled: true,
+                displayErrorTraces: true);
+
+            environment.Json();
+            environment.Globalization(new[] { "en-US" });
+
+            return environment;
+        }
+
         [Fact]
         public void ShouldBuildStaticLinks()
         {
@@ -222,7 +240,7 @@ namespace Nancy.Hal.Tests
         [Fact]
         public void ShouldSetContentTypeToApplicationHalJson()
         {
-            var context = new NancyContext();
+            var context = new NancyContext { Environment = GetTestingEnvironment() };
             var config = new HalConfiguration();
 
             var processor = new HalJsonResponseProcessor(config, new[] { JsonSerializer });
@@ -256,8 +274,7 @@ namespace Nancy.Hal.Tests
             globalConfig.For<PetOwner>().
                 Links("rel1", "/staticAddress1");
 
-            var context = new NancyContext();
-
+            var context = new NancyContext {Environment = GetTestingEnvironment()};
             context.LocalHalConfigFor<PetOwner>()
                 .Links("rel2", "/staticAddress2");
 
@@ -286,7 +303,7 @@ namespace Nancy.Hal.Tests
 
         private static NancyContext CreateTestContext(dynamic query)
         {
-            var context = new NancyContext { Request = new Request("method", "path", "http") { Query = query } };
+            var context = new NancyContext { Request = new Request("method", "path", "http") { Query = query }, Environment = GetTestingEnvironment() };
             return context;
         }
 
@@ -294,7 +311,7 @@ namespace Nancy.Hal.Tests
 
         private JObject Serialize(object model, IProvideHalTypeConfiguration config, NancyContext context = null)
         {
-            if (context == null) context = new NancyContext();
+            if (context == null) context = new NancyContext { Environment = GetTestingEnvironment() };
 
             var processor = new HalJsonResponseProcessor(config, new[] { JsonSerializer });
             var response = (JsonResponse)processor.Process(new MediaRange("application/hal+json"), model, context);
@@ -310,10 +327,8 @@ namespace Nancy.Hal.Tests
 
     public class DefaultJsonSerializerTests : JsonResponseProcessorTests
     {
-        protected override ISerializer JsonSerializer
-        {
-            get { return new DefaultJsonSerializer(); }
-        }
+
+        protected override ISerializer JsonSerializer => new DefaultJsonSerializer(GetTestingEnvironment());
 
         // Serialiser converts names to camel case
         protected override string AdjustName(string name)
@@ -342,6 +357,7 @@ namespace Nancy.Hal.Tests
         // Serialiser converts names to camel case
         protected override string AdjustName(string name)
         {
+      
             return name.ToCamelCase();
         }
     }
