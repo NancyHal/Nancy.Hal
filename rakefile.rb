@@ -106,8 +106,8 @@ task :nuget_package => [:publish] do
             # Override common values
             xml.root.elements["metadata/authors"].text = "#{CONTRIBUTORS}"
             xml.root.elements["metadata/description"].text = "Provides Hal+JSON media type support for Nancy."
-            xml.root.elements["metadata/licenseUrl"].text = "https://github.com/danbarua/Nancy.Hal/blob/master/LICENSE"
-            xml.root.elements["metadata/projectUrl"].text = "https://github.com/danbarua/Nancy.Hal"
+            xml.root.elements["metadata/licenseUrl"].text = "https://github.com/NancyHal/Nancy.Hal/blob/master/LICENSE"
+            xml.root.elements["metadata/projectUrl"].text = "https://github.com/NancyHal/Nancy.Hal"
         end
     end
 
