@@ -4,14 +4,12 @@ using Nancy.Hal.Processors;
 using Nancy.Serialization.JsonNet;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using ServiceStack.Text;
 using Xunit;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Nancy.Responses;
 using Nancy.Responses.Negotiation;
-using Nancy.Serialization.ServiceStack;
 using Nancy.Json;
 using Newtonsoft.Json.Linq;
 using ServiceStack;
@@ -359,19 +357,6 @@ namespace Nancy.Hal.Tests
         {
       
             return name.ToCamelCase();
-        }
-    }
-
-    public class ServiceStackSerializerTests : JsonResponseProcessorTests
-    {
-        //doesnt work because ServiceStackJsonSerializer won't let me override camelcase settings
-        //(need to expose a constructor so i can pass my own instance in)
-        protected override ISerializer JsonSerializer
-        {
-            get
-            {
-                return new ServiceStackJsonSerializer();
-            }
         }
     }
 }

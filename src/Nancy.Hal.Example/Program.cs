@@ -1,17 +1,20 @@
-﻿using System;
+﻿using System.IO;
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Nancy.Hal.Example.Model.Users.ViewModels;
-using Nancy.Hosting.Self;
 
-namespace Nancy.Hal.Example {
+namespace Nancy.Hal.Example
+{
     static class Program {
         static void Main () {
 
-            using (var host = new NancyHost (new Uri ("http://localhost:1234"))) {
-                host.Start ();
-                Console.WriteLine ("Server running on http://localhost:1234");
-                Console.ReadLine ();
-            }
+            var host = new WebHostBuilder()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseKestrel()
+                .UseStartup<Startup>()
+                .Build();
+
+            host.Run();
         }
 
         public class DomainProfile : Profile {
