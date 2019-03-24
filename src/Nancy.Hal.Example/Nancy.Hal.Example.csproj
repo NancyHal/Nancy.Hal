@@ -19,4 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Hal\Nancy.Hal.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mapping\" />
+  </ItemGroup>
 </Project>

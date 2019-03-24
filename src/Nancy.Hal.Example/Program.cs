@@ -1,7 +1,6 @@
-﻿using System.IO;
-using AutoMapper;
+﻿using System;
+using System.IO;
 using Microsoft.AspNetCore.Hosting;
-using Nancy.Hal.Example.Model.Users.ViewModels;
 
 namespace Nancy.Hal.Example
 {
@@ -12,16 +11,10 @@ namespace Nancy.Hal.Example
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseKestrel()
                 .UseStartup<Startup>()
+                .UseUrls("http://localhost:1234/")
                 .Build();
 
             host.Run();
-        }
-
-        public class DomainProfile : Profile {
-            public DomainProfile () {
-                CreateMap<UserDetails, UserSummary> ();
-                CreateMap<RoleDetails, Role> ();
-            }
         }
     }
 }
