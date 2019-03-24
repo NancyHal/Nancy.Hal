@@ -13,24 +13,12 @@ namespace Nancy.Hal.Example
     // Autodiscovered by Nancy
     public class ExampleBootstrapper : DefaultNancyBootstrapper
     {
-        private readonly IAppConfiguration appConfig;
-
-        public ExampleBootstrapper()
-        {
-        }
-
-        public ExampleBootstrapper(IAppConfiguration appConfig)
-        {
-            this.appConfig = appConfig;
-        }
-
         protected override void ConfigureApplicationContainer(TinyIoc.TinyIoCContainer container)
         {
             base.ConfigureApplicationContainer(container);
 
             // This is the important part - build HAL config for types
             container.Register(typeof(IProvideHalTypeConfiguration), HypermediaConfiguration());
-            container.Register(appConfig);
 
             var db = new Database();
             CreateTestDataIn(db);
