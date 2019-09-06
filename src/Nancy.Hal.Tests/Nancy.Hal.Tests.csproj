@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
-    <PackageReference Include="FakeItEasy" Version="4.3.0" />
+    <PackageReference Include="FakeItEasy" Version="5.2.0" />
     <PackageReference Include="Nancy" Version="2.0.0-clinteastwood" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.0" />
     <PackageReference Include="Nancy.Serialization.JsonNet" Version="2.0.0-clinteastwood" />
