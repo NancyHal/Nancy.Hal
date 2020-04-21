@@ -9,7 +9,7 @@
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="FakeItEasy" Version="4.3.0" />
     <PackageReference Include="Nancy" Version="2.0.0-clinteastwood" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.0" />
     <PackageReference Include="Nancy.Serialization.JsonNet" Version="2.0.0-clinteastwood" />
     <PackageReference Include="Nancy.Serialization.ServiceStack" Version="2.0.0-clinteastwood" />
     <PackageReference Include="Nancy.Testing" Version="2.0.0-clinteastwood" />
