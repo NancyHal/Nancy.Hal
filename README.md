@@ -1,3 +1,6 @@
+** Announcement ** - Nancy.Hal is no longer being maintained! Since NancyFx is no longer being maintained, it doesn't make sense for Nancy.Hal to exist either.
+Thanks to all who contributed to this project.
+
 Nancy.Hal [![NuGet Badge](https://buildstats.info/nuget/Nancy.Hal)](https://www.nuget.org/packages/Nancy.Hal/)
 =========
 
